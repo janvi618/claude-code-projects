@@ -1,0 +1,39 @@
+{
+  "name": "Feedforward AI Course",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postStartCommand": "bash .devcontainer/startup.sh",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "anthropic.claude-code"
+      ],
+      "settings": {
+        "settingsSync.enable": false,
+        "workbench.activityBar.visible": false,
+        "workbench.sideBar.visible": false,
+        "workbench.statusBar.visible": false,
+        "workbench.editor.showTabs": "none",
+        "workbench.startupEditor": "none",
+        "window.menuBarVisibility": "hidden",
+        "workbench.layoutControl.enabled": false,
+        "workbench.tips.enabled": false,
+        "workbench.welcomePage.walkthroughs.openOnInstall": false,
+        "editor.minimap.enabled": false,
+        "breadcrumbs.enabled": false,
+        "window.commandCenter": false,
+        "workbench.editor.empty.hint": "hidden"
+      }
+    }
+  },
+
+  "remoteUser": "vscode"
+}

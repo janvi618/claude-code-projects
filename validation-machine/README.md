@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Validation Machine
 
-## Getting Started
+An automated demand-testing machine for product teams. Submit a product concept + target audience, and the system generates landing page variants, runs simulated campaigns, and delivers Go/No-Go recommendations.
 
-First, run the development server:
+## Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Set up database
+npx prisma db push
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How It Works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Create a new validation test with your product concept and target audience
+2. Click "Generate Landing Pages & Ads" to create 3 variant landing pages
+3. Click "Run Simulation" to generate realistic campaign metrics
+4. View results: Go/No-Go recommendation, score, and detailed metrics
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+- `DATABASE_URL`: SQLite database path (default: file:./dev.db)
+- `ANTHROPIC_API_KEY`: Claude API key (leave blank for mock mode)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js 14
+- Prisma (SQLite)
+- Tailwind CSS
+- Claude API (with mock fallback)

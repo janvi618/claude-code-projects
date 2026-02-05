@@ -1,11 +1,80 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
+}
+
+model ValidationTest {
+  id          String    @id @default(cuid())
+  concept     String
+  audience    String
+  budget      Int       @default(300)
+  maxDuration Int       @default(7)
+  stopThreshold Int     @default(50)
+  status      String    @default("pending") // pending, generating, running, completed
+  mode        String    @default("simulation") // simulation, live
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  variants    Variant[]
+  results     Results?
+}
+
+model Variant {
+  id          String   @id @default(cuid())
+  testId      String
+  test        ValidationTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+  name        String   // "A", "B", "C"
+  angle       String   // "benefit", "problem", "social"
+  headline    String
+  subhead     String
+  bullets     String   // JSON array
+  ctaText     String
+  imageUrl    String?
+
+  // Generated ad copy
+  adShortCopy   String?
+  adMediumCopy  String?
+
+  // Metrics (simulated or real)
+  impressions   Int     @default(0)
+  clicks        Int     @default(0)
+  visits        Int     @default(0)
+  signups       Int     @default(0)
+  spend         Float   @default(0)
+
+  signupList    Signup[]
+  createdAt     DateTime @default(now())
+}
+
+model Signup {
+  id          String   @id @default(cuid())
+  variantId   String
+  variant     Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  email       String
+  source      String?  // utm params
+  device      String?
+  location    String?
+  createdAt   DateTime @default(now())
+}
+
+model Results {
+  id          String   @id @default(cuid())
+  testId      String   @unique
+  test        ValidationTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  score           Int      // 0-100
+  recommendation  String   // "go", "promising", "no-go"
+  summary         String   // AI-generated summary
+  winningVariant  String?  // variant id
+
+  totalSignups    Int
+  totalSpend      Float
+  costPerSignup   Float
+  avgCtr          Float
+  avgConversion   Float
+
+  createdAt   DateTime @default(now())
 }

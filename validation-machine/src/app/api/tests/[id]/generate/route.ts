@@ -17,16 +17,28 @@ export async function POST(
       return NextResponse.json({ error: 'Test not found' }, { status: 404 })
     }
 
+    if (test.status !== 'images_ready') {
+      return NextResponse.json(
+        { error: 'Test is not in images_ready status' },
+        { status: 400 }
+      )
+    }
+
     // Update status to generating
     await prisma.validationTest.update({
       where: { id },
       data: { status: 'generating' },
     })
 
-    // Generate variants
+    // Generate variants (copy)
     const variantContents = await generateVariants(test.concept, test.audience)
 
-    // Save variants to database
+    // Parse pre-generated concept images
+    const conceptImages: Record<string, string> = test.conceptImages
+      ? JSON.parse(test.conceptImages)
+      : {}
+
+    // Save variants to database, assigning concept images to each
     for (const content of variantContents) {
       await prisma.variant.create({
         data: {
@@ -39,11 +51,12 @@ export async function POST(
           ctaText: content.ctaText,
           adShortCopy: content.adShortCopy,
           adMediumCopy: content.adMediumCopy,
+          imageUrl: conceptImages[content.name] || null,
         },
       })
     }
 
-    // Update status
+    // Update status directly to running (images already done)
     await prisma.validationTest.update({
       where: { id },
       data: { status: 'running' },

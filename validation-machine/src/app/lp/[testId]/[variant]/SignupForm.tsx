@@ -39,13 +39,13 @@ export function SignupForm({ variantId, ctaText, utmSource }: Props) {
 
   if (submitted) {
     return (
-      <div className="text-center py-8">
-        <div className="text-4xl mb-4">🎉</div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-          You're on the list!
+      <div className="text-center py-8 animate-fadeIn">
+        <div className="text-5xl mb-4">🎉</div>
+        <h3 className="text-xl font-semibold text-slate-900 mb-2">
+          You&apos;re on the list!
         </h3>
-        <p className="text-gray-600">
-          We'll notify you when we launch. Thanks for your interest!
+        <p className="text-slate-500">
+          We&apos;ll notify you when we launch. Thanks for your interest!
         </p>
       </div>
     )
@@ -54,7 +54,7 @@ export function SignupForm({ variantId, ctaText, utmSource }: Props) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
           Email address
         </label>
         <input
@@ -64,17 +64,24 @@ export function SignupForm({ variantId, ctaText, utmSource }: Props) {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@example.com"
           required
-          className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:bg-white placeholder-slate-400"
         />
       </div>
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
+        className="w-full py-3.5 px-4 bg-gradient-to-r from-indigo-600 to-violet-500 text-white rounded-xl font-semibold hover:-translate-y-0.5 hover:shadow-lg shadow-md disabled:opacity-50 disabled:hover:translate-y-0 flex items-center justify-center gap-2"
       >
-        {loading ? 'Signing up...' : ctaText}
+        {loading ? (
+          <>
+            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            Signing up...
+          </>
+        ) : (
+          ctaText
+        )}
       </button>
-      <p className="text-xs text-gray-500 text-center">
+      <p className="text-xs text-slate-400 text-center">
         No spam. Unsubscribe anytime.
       </p>
     </form>

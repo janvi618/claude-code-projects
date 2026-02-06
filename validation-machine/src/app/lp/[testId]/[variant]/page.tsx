@@ -33,32 +33,46 @@ export default async function LandingPage({ params, searchParams }: Props) {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-violet-50/30 to-white">
       <div className="max-w-2xl mx-auto px-4 py-16">
+        {/* Ad Image */}
+        {variant.imageUrl && (
+          <div className="mb-8 rounded-2xl overflow-hidden shadow-lg border border-slate-100 animate-fadeIn">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={variant.imageUrl}
+              alt={`Ad creative for ${variant.headline}`}
+              className="w-full aspect-[1200/628] object-cover"
+            />
+          </div>
+        )}
+
         {/* Hero */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-12 animate-fadeIn">
+          <h1 className="text-4xl font-bold text-slate-900 mb-4 leading-tight">
             {variant.headline}
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-slate-600">
             {variant.subhead}
           </p>
         </div>
 
         {/* Benefits */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 mb-8 animate-fadeIn" style={{ animationDelay: '100ms' }}>
           <ul className="space-y-4">
             {bullets.map((bullet, idx) => (
               <li key={idx} className="flex items-start gap-3">
-                <span className="text-green-500 text-xl">✓</span>
-                <span className="text-gray-700">{bullet}</span>
+                <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
+                  ✓
+                </span>
+                <span className="text-slate-700">{bullet}</span>
               </li>
             ))}
           </ul>
         </div>
 
         {/* Signup Form */}
-        <div className="bg-white rounded-lg shadow-lg p-8">
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 animate-fadeIn" style={{ animationDelay: '200ms' }}>
           <SignupForm
             variantId={variant.id}
             ctaText={variant.ctaText}
@@ -67,8 +81,8 @@ export default async function LandingPage({ params, searchParams }: Props) {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-xs text-gray-400 mt-8">
-          This is a product validation page. We're testing interest before building.
+        <p className="text-center text-xs text-slate-400 mt-8">
+          This is a product validation page. We&apos;re testing interest before building.
           Your email will only be used to notify you if we launch.
         </p>
       </div>

@@ -13,7 +13,8 @@ model ValidationTest {
   budget      Int       @default(300)
   maxDuration Int       @default(7)
   stopThreshold Int     @default(50)
-  status      String    @default("pending") // pending, generating, running, completed
+  conceptImages String?  // JSON: {"A": "/generated/...", "B": "...", "C": "..."}
+  status      String    @default("pending") // pending, images_ready, generating, running, completed
   mode        String    @default("simulation") // simulation, live
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

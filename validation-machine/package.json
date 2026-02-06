@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.73.0",
+    "@google/generative-ai": "^0.24.1",
     "@prisma/adapter-better-sqlite3": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "better-sqlite3": "^12.6.2",

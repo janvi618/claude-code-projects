@@ -1,0 +1,193 @@
+month,department,metric_name,metric_value,metric_unit,company_avg,notes
+2025-01,Operations,shrinkage_rate,3.2,%,3.1,Baseline
+2025-02,Operations,shrinkage_rate,3.3,%,3.2,Baseline
+2025-03,Operations,shrinkage_rate,3.1,%,3.0,Baseline
+2025-04,Operations,shrinkage_rate,3.2,%,3.1,Baseline
+2025-05,Operations,shrinkage_rate,3.1,%,3.1,Slight improvement
+2025-06,Operations,shrinkage_rate,2.9,%,3.1,Indianapolis improving
+2025-07,Operations,shrinkage_rate,2.7,%,3.0,Continued improvement
+2025-08,Operations,shrinkage_rate,2.5,%,3.0,Strong improvement
+2025-09,Operations,shrinkage_rate,2.4,%,2.9,Leading company
+2025-10,Operations,shrinkage_rate,2.3,%,2.9,Continued lead
+2025-11,Operations,shrinkage_rate,2.2,%,2.9,Best in company
+2025-12,Operations,shrinkage_rate,2.1,%,2.8,22% better than avg
+2025-01,Operations,damage_rate,1.8,%,1.9,Baseline
+2025-02,Operations,damage_rate,1.9,%,1.8,Baseline
+2025-03,Operations,damage_rate,1.7,%,1.8,Baseline
+2025-04,Operations,damage_rate,1.8,%,1.9,Baseline
+2025-05,Operations,damage_rate,1.7,%,1.8,Slight improvement
+2025-06,Operations,damage_rate,1.5,%,1.8,Indianapolis Zone C fix
+2025-07,Operations,damage_rate,1.3,%,1.7,Strong improvement
+2025-08,Operations,damage_rate,1.1,%,1.7,Continued improvement
+2025-09,Operations,damage_rate,1.0,%,1.6,Leading company
+2025-10,Operations,damage_rate,0.9,%,1.6,Continued lead
+2025-11,Operations,damage_rate,0.9,%,1.5,Best in company
+2025-12,Operations,damage_rate,0.8,%,1.5,47% better than avg
+2025-01,Marketing,campaign_velocity,4.2,campaigns/month,4.0,Baseline
+2025-02,Marketing,campaign_velocity,3.8,campaigns/month,4.1,Baseline
+2025-03,Marketing,campaign_velocity,4.5,campaigns/month,4.2,Baseline
+2025-04,Marketing,campaign_velocity,4.8,campaigns/month,4.3,Slight improvement
+2025-05,Marketing,campaign_velocity,5.2,campaigns/month,4.2,Improvement
+2025-06,Marketing,campaign_velocity,5.5,campaigns/month,4.4,Continued improvement
+2025-07,Marketing,campaign_velocity,5.8,campaigns/month,4.3,Strong improvement
+2025-08,Marketing,campaign_velocity,6.2,campaigns/month,4.5,Leading company
+2025-09,Marketing,campaign_velocity,6.0,campaigns/month,4.4,Stable high
+2025-10,Marketing,campaign_velocity,6.3,campaigns/month,4.5,Continued lead
+2025-11,Marketing,campaign_velocity,6.5,campaigns/month,4.6,Best in company
+2025-12,Marketing,campaign_velocity,6.4,campaigns/month,4.5,42% above avg
+2025-01,Marketing,competitive_response_time,21,days,24,Baseline
+2025-02,Marketing,competitive_response_time,24,days,23,Baseline
+2025-03,Marketing,competitive_response_time,18,days,22,Slight improvement
+2025-04,Marketing,competitive_response_time,14,days,21,Improvement
+2025-05,Marketing,competitive_response_time,10,days,20,Strong improvement
+2025-06,Marketing,competitive_response_time,7,days,19,Caught competitor pivot early
+2025-07,Marketing,competitive_response_time,5,days,18,Leading company
+2025-08,Marketing,competitive_response_time,4,days,17,Continued lead
+2025-09,Marketing,competitive_response_time,4,days,16,Stable
+2025-10,Marketing,competitive_response_time,3,days,15,Best in company
+2025-11,Marketing,competitive_response_time,3,days,14,Best in company
+2025-12,Marketing,competitive_response_time,4,days,14,71% faster than avg
+2025-01,Supply Chain,on_time_delivery,94.2,%,93.5,Baseline
+2025-02,Supply Chain,on_time_delivery,93.8,%,93.2,Baseline
+2025-03,Supply Chain,on_time_delivery,94.5,%,93.8,Baseline
+2025-04,Supply Chain,on_time_delivery,94.1,%,93.4,Baseline
+2025-05,Supply Chain,on_time_delivery,94.3,%,93.6,Baseline
+2025-06,Supply Chain,on_time_delivery,95.2,%,93.5,Carrier prediction starting
+2025-07,Supply Chain,on_time_delivery,96.1,%,93.8,Improvement
+2025-08,Supply Chain,on_time_delivery,96.8,%,94.0,Strong improvement
+2025-09,Supply Chain,on_time_delivery,97.2,%,94.1,Leading company
+2025-10,Supply Chain,on_time_delivery,97.5,%,94.2,Continued lead
+2025-11,Supply Chain,on_time_delivery,97.3,%,94.0,Best in company
+2025-12,Supply Chain,on_time_delivery,97.6,%,94.3,3.3pp above avg
+2025-01,Supply Chain,carrier_issues,8,count,7,Baseline
+2025-02,Supply Chain,carrier_issues,6,count,8,Baseline
+2025-03,Supply Chain,carrier_issues,9,count,7,Baseline
+2025-04,Supply Chain,carrier_issues,7,count,8,Baseline
+2025-05,Supply Chain,carrier_issues,8,count,7,Baseline
+2025-06,Supply Chain,carrier_issues,5,count,7,First predictions
+2025-07,Supply Chain,carrier_issues,3,count,8,Strong improvement
+2025-08,Supply Chain,carrier_issues,2,count,7,Continued improvement
+2025-09,Supply Chain,carrier_issues,2,count,6,Leading company
+2025-10,Supply Chain,carrier_issues,1,count,6,Best in company
+2025-11,Supply Chain,carrier_issues,2,count,5,Continued lead
+2025-12,Supply Chain,carrier_issues,1,count,5,80% fewer issues
+2025-01,Finance,close_cycle_days,8.5,days,8.2,Baseline
+2025-02,Finance,close_cycle_days,8.2,days,8.4,Baseline
+2025-03,Finance,close_cycle_days,8.6,days,8.3,Baseline
+2025-04,Finance,close_cycle_days,8.3,days,8.5,Baseline
+2025-05,Finance,close_cycle_days,8.4,days,8.2,Baseline
+2025-06,Finance,close_cycle_days,8.1,days,8.3,Slight improvement
+2025-07,Finance,close_cycle_days,7.5,days,8.4,Improvement
+2025-08,Finance,close_cycle_days,6.8,days,8.2,Strong improvement
+2025-09,Finance,close_cycle_days,6.2,days,8.1,Leading company
+2025-10,Finance,close_cycle_days,5.8,days,8.0,Continued lead
+2025-11,Finance,close_cycle_days,5.5,days,7.9,Best in company
+2025-12,Finance,close_cycle_days,5.2,days,7.8,33% faster than avg
+2025-01,Legal,contract_turnaround_days,12.5,days,11.8,Baseline
+2025-02,Legal,contract_turnaround_days,11.2,days,12.0,Baseline
+2025-03,Legal,contract_turnaround_days,13.1,days,11.5,Baseline
+2025-04,Legal,contract_turnaround_days,10.8,days,11.8,Improvement starting
+2025-05,Legal,contract_turnaround_days,9.2,days,11.5,Strong improvement
+2025-06,Legal,contract_turnaround_days,7.8,days,11.2,Continued improvement
+2025-07,Legal,contract_turnaround_days,6.5,days,10.8,Leading company
+2025-08,Legal,contract_turnaround_days,5.8,days,10.5,Continued lead
+2025-09,Legal,contract_turnaround_days,5.2,days,10.2,Best in company
+2025-10,Legal,contract_turnaround_days,5.0,days,9.8,Stable
+2025-11,Legal,contract_turnaround_days,4.8,days,9.5,Continued lead
+2025-12,Legal,contract_turnaround_days,4.5,days,9.2,51% faster than avg
+2025-01,Customer Service,issue_resolution_time,48,hours,52,Baseline
+2025-02,Customer Service,issue_resolution_time,52,hours,50,Baseline
+2025-03,Customer Service,issue_resolution_time,46,hours,51,Baseline
+2025-04,Customer Service,issue_resolution_time,50,hours,49,Baseline
+2025-05,Customer Service,issue_resolution_time,45,hours,48,Slight improvement
+2025-06,Customer Service,issue_resolution_time,38,hours,47,Early detection helping
+2025-07,Customer Service,issue_resolution_time,32,hours,45,Strong improvement
+2025-08,Customer Service,issue_resolution_time,28,hours,44,Quality issue caught early
+2025-09,Customer Service,issue_resolution_time,26,hours,42,Leading company
+2025-10,Customer Service,issue_resolution_time,24,hours,40,Continued lead
+2025-11,Customer Service,issue_resolution_time,22,hours,38,Best in company
+2025-12,Customer Service,issue_resolution_time,21,hours,36,42% faster than avg
+2025-01,R&D,time_to_prototype,18,weeks,17,Baseline
+2025-02,R&D,time_to_prototype,16,weeks,18,Baseline
+2025-03,R&D,time_to_prototype,19,weeks,17,Baseline
+2025-04,R&D,time_to_prototype,17,weeks,18,Baseline
+2025-05,R&D,time_to_prototype,18,weeks,17,Baseline
+2025-06,R&D,time_to_prototype,16,weeks,17,Slight improvement
+2025-07,R&D,time_to_prototype,14,weeks,16,Improvement
+2025-08,R&D,time_to_prototype,12,weeks,16,Strong improvement
+2025-09,R&D,time_to_prototype,11,weeks,15,Faster patent analysis
+2025-10,R&D,time_to_prototype,10,weeks,15,Leading company
+2025-11,R&D,time_to_prototype,10,weeks,14,Stable
+2025-12,R&D,time_to_prototype,9,weeks,14,36% faster than avg
+2025-01,HR,employee_satisfaction,68,%,70,Baseline
+2025-02,HR,employee_satisfaction,67,%,69,Baseline
+2025-03,HR,employee_satisfaction,69,%,70,Baseline
+2025-04,HR,employee_satisfaction,68,%,69,Baseline
+2025-05,HR,employee_satisfaction,69,%,70,Baseline
+2025-06,HR,employee_satisfaction,70,%,69,Slight improvement
+2025-07,HR,employee_satisfaction,71,%,68,Improvement
+2025-08,HR,employee_satisfaction,73,%,68,Career conversations improving
+2025-09,HR,employee_satisfaction,75,%,69,Strong improvement
+2025-10,HR,employee_satisfaction,77,%,69,Leading company
+2025-11,HR,employee_satisfaction,79,%,70,Continued lead
+2025-12,HR,employee_satisfaction,81,%,70,16% above avg
+2025-01,HR,internal_mobility_rate,8.2,%,7.8,Baseline
+2025-02,HR,internal_mobility_rate,7.5,%,8.0,Baseline
+2025-03,HR,internal_mobility_rate,8.8,%,7.5,Baseline
+2025-04,HR,internal_mobility_rate,7.9,%,8.2,Baseline
+2025-05,HR,internal_mobility_rate,8.1,%,7.8,Baseline
+2025-06,HR,internal_mobility_rate,8.4,%,7.9,Slight improvement
+2025-07,HR,internal_mobility_rate,9.2,%,8.0,Improvement
+2025-08,HR,internal_mobility_rate,10.1,%,8.1,Strong improvement
+2025-09,HR,internal_mobility_rate,11.5,%,8.2,Career coaching working
+2025-10,HR,internal_mobility_rate,12.3,%,8.3,Leading company
+2025-11,HR,internal_mobility_rate,13.2,%,8.4,Continued lead
+2025-12,HR,internal_mobility_rate,14.1,%,8.5,66% above avg
+2025-01,Sales,win_rate,38,%,40,Baseline
+2025-02,Sales,win_rate,42,%,39,Baseline
+2025-03,Sales,win_rate,36,%,41,Baseline
+2025-04,Sales,win_rate,40,%,38,Baseline
+2025-05,Sales,win_rate,41,%,40,Slight improvement
+2025-06,Sales,win_rate,44,%,39,Improvement
+2025-07,Sales,win_rate,48,%,40,Strong improvement
+2025-08,Sales,win_rate,52,%,41,Tony's system working
+2025-09,Sales,win_rate,54,%,42,Leading company
+2025-10,Sales,win_rate,53,%,41,Stable high
+2025-11,Sales,win_rate,56,%,43,Best in company
+2025-12,Sales,win_rate,55,%,42,31% above avg
+2025-01,Sales,avg_deal_cycle_days,95,days,92,Baseline
+2025-02,Sales,avg_deal_cycle_days,102,days,98,Baseline
+2025-03,Sales,avg_deal_cycle_days,88,days,94,Baseline
+2025-04,Sales,avg_deal_cycle_days,98,days,90,Baseline
+2025-05,Sales,avg_deal_cycle_days,92,days,95,Baseline
+2025-06,Sales,avg_deal_cycle_days,85,days,93,Improvement
+2025-07,Sales,avg_deal_cycle_days,78,days,91,Better prep = faster deals
+2025-08,Sales,avg_deal_cycle_days,72,days,88,Strong improvement
+2025-09,Sales,avg_deal_cycle_days,68,days,86,Leading company
+2025-10,Sales,avg_deal_cycle_days,65,days,84,Continued lead
+2025-11,Sales,avg_deal_cycle_days,62,days,82,Best in company
+2025-12,Sales,avg_deal_cycle_days,60,days,80,25% faster than avg
+2025-01,IT,ticket_resolution_time,18,hours,20,Baseline
+2025-02,IT,ticket_resolution_time,22,hours,19,Baseline
+2025-03,IT,ticket_resolution_time,17,hours,21,Baseline
+2025-04,IT,ticket_resolution_time,20,hours,18,Baseline
+2025-05,IT,ticket_resolution_time,19,hours,20,Baseline
+2025-06,IT,ticket_resolution_time,21,hours,19,No change
+2025-07,IT,ticket_resolution_time,20,hours,20,No change
+2025-08,IT,ticket_resolution_time,19,hours,18,No change
+2025-09,IT,ticket_resolution_time,21,hours,19,No change
+2025-10,IT,ticket_resolution_time,18,hours,20,No change
+2025-11,IT,ticket_resolution_time,20,hours,18,No change
+2025-12,IT,ticket_resolution_time,19,hours,19,No star performer - flat
+2025-01,Executive,decision_cycle_days,14,days,15,Baseline
+2025-02,Executive,decision_cycle_days,16,days,14,Baseline
+2025-03,Executive,decision_cycle_days,13,days,15,Baseline
+2025-04,Executive,decision_cycle_days,15,days,14,Baseline
+2025-05,Executive,decision_cycle_days,14,days,15,Baseline
+2025-06,Executive,decision_cycle_days,15,days,14,No change
+2025-07,Executive,decision_cycle_days,14,days,15,No change
+2025-08,Executive,decision_cycle_days,16,days,14,No change
+2025-09,Executive,decision_cycle_days,13,days,15,No change
+2025-10,Executive,decision_cycle_days,15,days,14,No change
+2025-11,Executive,decision_cycle_days,14,days,15,No change
+2025-12,Executive,decision_cycle_days,15,days,14,No star performer - flat

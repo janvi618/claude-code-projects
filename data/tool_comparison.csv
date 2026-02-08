@@ -1,0 +1,5 @@
+tool_type,tool_name,monthly_cost_per_user,total_annual_cost,active_users,monthly_active_rate,cost_per_active_user_month,measurable_roi,workflow_transformations,user_satisfaction
+Enterprise,EnterpriseAI.ai,30,720000,740,37%,81,Not demonstrated,0,3.2
+Frontier,Claude Pro,20,2160,9,100%,20,Demonstrated - see star performers,9,4.6
+Frontier,ChatGPT Plus,20,240,1,100%,20,Demonstrated - Maria Elena,1,4.4
+Frontier,Claude API,Variable,1200,1,100%,100,Demonstrated - Carl,1,4.8

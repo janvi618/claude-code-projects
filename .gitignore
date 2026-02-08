@@ -9,3 +9,23 @@ docs/claude-code/
 
 # VS Code settings (managed by startup.sh)
 .vscode/
+
+# Dependencies (reinstallable via npm install)
+node_modules/
+
+# Build outputs
+.next/
+__pycache__/
+
+# Database files
+*.db
+
+# Environment files
+.env
+
+# Zip archives and downloads
+*.zip
+download/
+
+# Generated images
+validation-machine/public/generated/

@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.prose table {
+  @apply w-full border-collapse;
+}
+
+.prose th,
+.prose td {
+  @apply border border-gray-300 px-3 py-2 text-left;
+}
+
+.prose th {
+  @apply bg-gray-100 font-semibold;
+}
+
+.prose h1 {
+  @apply text-2xl font-bold text-gray-900 border-b pb-2 mb-4;
+}
+
+.prose h2 {
+  @apply text-xl font-semibold text-gray-800 mt-6 mb-3;
+}
+
+.prose h3 {
+  @apply text-lg font-medium text-gray-700 mt-4 mb-2;
+}
+
+.prose ul {
+  @apply list-disc pl-5 my-2;
+}
+
+.prose ol {
+  @apply list-decimal pl-5 my-2;
+}
+
+.prose code {
+  @apply bg-gray-100 px-1 py-0.5 rounded text-sm;
+}
+
+.prose pre {
+  @apply bg-gray-100 p-4 rounded overflow-x-auto;
+}

@@ -17,9 +17,9 @@ export async function POST(
       return NextResponse.json({ error: 'Test not found' }, { status: 404 })
     }
 
-    if (test.status !== 'images_ready') {
+    if (test.status !== 'image_selected') {
       return NextResponse.json(
-        { error: 'Test is not in images_ready status' },
+        { error: 'Test is not in image_selected status' },
         { status: 400 }
       )
     }
@@ -33,12 +33,15 @@ export async function POST(
     // Generate variants (copy)
     const variantContents = await generateVariants(test.concept, test.audience)
 
-    // Parse pre-generated concept images
+    // Parse variation images (preferred) or fall back to concept images
+    const variationImages: Record<string, string> = test.variationImages
+      ? JSON.parse(test.variationImages)
+      : {}
     const conceptImages: Record<string, string> = test.conceptImages
       ? JSON.parse(test.conceptImages)
       : {}
 
-    // Save variants to database, assigning concept images to each
+    // Save variants to database, assigning variation images (or concept images as fallback)
     for (const content of variantContents) {
       await prisma.variant.create({
         data: {
@@ -51,7 +54,7 @@ export async function POST(
           ctaText: content.ctaText,
           adShortCopy: content.adShortCopy,
           adMediumCopy: content.adMediumCopy,
-          imageUrl: conceptImages[content.name] || null,
+          imageUrl: variationImages[content.name] || conceptImages[content.name] || null,
         },
       })
     }

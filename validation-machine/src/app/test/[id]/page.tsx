@@ -35,6 +35,8 @@ interface Test {
   budget: number
   status: string
   conceptImages: string | null
+  selectedImage: string | null
+  variationImages: string | null
   variants: Variant[]
   results: Results | null
 }
@@ -46,6 +48,8 @@ export default function TestDetailPage() {
   const [generatingImages, setGeneratingImages] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [simulating, setSimulating] = useState(false)
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null)
+  const [selectingImage, setSelectingImage] = useState(false)
 
   const fetchTest = async () => {
     const res = await fetch(`/api/tests/${params.id}`)
@@ -67,6 +71,21 @@ export default function TestDetailPage() {
       await fetchTest()
     } finally {
       setGeneratingImages(false)
+    }
+  }
+
+  const handleSelectImage = async () => {
+    if (!selectedImageUrl) return
+    setSelectingImage(true)
+    try {
+      await fetch(`/api/tests/${params.id}/select-image`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ selectedImage: selectedImageUrl }),
+      })
+      await fetchTest()
+    } finally {
+      setSelectingImage(false)
     }
   }
 
@@ -155,11 +174,13 @@ export default function TestDetailPage() {
                     ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                     : test.status === 'running'
                     ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                    : test.status === 'image_selected'
+                    ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200'
                     : test.status === 'images_ready'
                     ? 'bg-violet-50 text-violet-700 border border-violet-200'
                     : 'bg-slate-50 text-slate-600 border border-slate-200'
                 }`}>
-                  {test.status === 'completed' ? '✅' : test.status === 'running' ? '⏳' : test.status === 'images_ready' ? '🎨' : '📋'} {test.status === 'images_ready' ? 'IMAGES READY' : test.status.toUpperCase()}
+                  {test.status === 'completed' ? '✅' : test.status === 'running' ? '⏳' : test.status === 'image_selected' ? '✨' : test.status === 'images_ready' ? '🎨' : '📋'} {test.status === 'images_ready' ? 'IMAGES READY' : test.status === 'image_selected' ? 'IMAGE SELECTED' : test.status.toUpperCase()}
                 </span>
               </div>
             </div>
@@ -174,8 +195,8 @@ export default function TestDetailPage() {
                 1
               </div>
               <div className="flex-1">
-                <h2 className="text-lg font-semibold text-slate-900">Generate Concept Images</h2>
-                <p className="text-sm text-slate-500">Create AI-generated visuals based on your concept and audience</p>
+                <h2 className="text-lg font-semibold text-slate-900">Visualize Your Idea</h2>
+                <p className="text-sm text-slate-500">Generate realistic product concept images showing what your idea would look like</p>
               </div>
               <button
                 onClick={handleGenerateImages}
@@ -188,23 +209,99 @@ export default function TestDetailPage() {
                     Generating Images...
                   </>
                 ) : (
-                  <>🎨 Generate Concept Images</>
+                  <>🎨 Visualize My Idea</>
                 )}
               </button>
             </div>
           </div>
         )}
 
-        {/* Step 2: Generate Copy & Assign Images (images_ready) */}
+        {/* Step 2: Select Concept Image (images_ready) */}
         {test.status === 'images_ready' && (
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 animate-fadeIn">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-white flex items-center justify-center font-bold text-lg shadow-md">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-400 text-white flex items-center justify-center font-bold text-lg shadow-md">
                 2
               </div>
               <div className="flex-1">
+                <h2 className="text-lg font-semibold text-slate-900">Select Your Favorite Concept</h2>
+                <p className="text-sm text-slate-500">Click an image to select it. We&apos;ll generate 3 style variations of your choice.</p>
+              </div>
+            </div>
+
+            {Object.keys(conceptImages).length > 0 && (
+              <div className="grid md:grid-cols-3 gap-4 mb-6">
+                {['A', 'B', 'C'].map((slot) => {
+                  const imageUrl = conceptImages[slot]
+                  if (!imageUrl) return null
+                  const isSelected = selectedImageUrl === imageUrl
+                  const slotColors: Record<string, string> = {
+                    A: 'from-indigo-500 to-violet-500',
+                    B: 'from-emerald-500 to-green-400',
+                    C: 'from-amber-500 to-yellow-400',
+                  }
+                  return (
+                    <button
+                      key={slot}
+                      onClick={() => setSelectedImageUrl(imageUrl)}
+                      className={`border-2 rounded-xl p-4 text-left transition-all ${
+                        isSelected
+                          ? 'border-fuchsia-500 ring-2 ring-fuchsia-200 shadow-md -translate-y-1'
+                          : 'border-slate-100 hover:border-slate-300 hover:shadow-sm'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${slotColors[slot]} text-white flex items-center justify-center font-bold text-xs shadow-sm`}>
+                          {slot}
+                        </div>
+                        <span className="text-sm text-slate-500 font-medium">Concept {slot}</span>
+                        {isSelected && (
+                          <span className="ml-auto text-fuchsia-600 text-sm font-semibold">✓ Selected</span>
+                        )}
+                      </div>
+                      <div className="rounded-lg overflow-hidden border border-slate-100">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={imageUrl}
+                          alt={`Concept image ${slot}`}
+                          className="w-full aspect-[1200/628] object-cover"
+                        />
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+
+            <div className="flex justify-end">
+              <button
+                onClick={handleSelectImage}
+                disabled={!selectedImageUrl || selectingImage}
+                className="px-5 py-2.5 bg-gradient-to-r from-fuchsia-600 to-pink-500 text-white rounded-xl font-medium hover:-translate-y-0.5 hover:shadow-lg shadow-md disabled:opacity-50 disabled:hover:translate-y-0 flex items-center gap-2"
+              >
+                {selectingImage ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Generating Variations...
+                  </>
+                ) : (
+                  <>✨ Confirm Selection & Generate Variations</>
+                )}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Generate Landing Pages (image_selected) */}
+        {test.status === 'image_selected' && (
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 animate-fadeIn">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-white flex items-center justify-center font-bold text-lg shadow-md">
+                3
+              </div>
+              <div className="flex-1">
                 <h2 className="text-lg font-semibold text-slate-900">Generate Landing Pages & Ads</h2>
-                <p className="text-sm text-slate-500">Create landing page variants and ad copy, paired with your concept images</p>
+                <p className="text-sm text-slate-500">Create landing page variants and ad copy, using your style variations</p>
               </div>
               <button
                 onClick={handleGenerate}
@@ -224,50 +321,55 @@ export default function TestDetailPage() {
           </div>
         )}
 
-        {/* Concept Image Preview (shown when images_ready, before variants exist) */}
-        {test.status === 'images_ready' && Object.keys(conceptImages).length > 0 && (
+        {/* Variation Image Preview (shown when image_selected, before variants exist) */}
+        {test.status === 'image_selected' && test.variationImages && (
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 animate-fadeIn">
             <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-              <span>🖼️</span> Concept Images Preview
+              <span>✨</span> Style Variations Preview
             </h2>
+            <p className="text-sm text-slate-500 mb-4">These variations of your chosen concept will be used across the 3 landing page variants.</p>
             <div className="grid md:grid-cols-3 gap-4">
-              {['A', 'B', 'C'].map((slot) => {
-                const imageUrl = conceptImages[slot]
-                if (!imageUrl) return null
-                const slotColors: Record<string, string> = {
-                  A: 'from-indigo-500 to-violet-500',
-                  B: 'from-emerald-500 to-green-400',
-                  C: 'from-amber-500 to-yellow-400',
-                }
-                return (
-                  <div key={slot} className="border border-slate-100 rounded-xl p-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${slotColors[slot]} text-white flex items-center justify-center font-bold text-xs shadow-sm`}>
-                        {slot}
+              {(() => {
+                const variations: Record<string, string> = JSON.parse(test.variationImages)
+                const styleLabels: Record<string, string> = { A: 'Minimalist', B: 'Bold & Vibrant', C: 'Elegant Premium' }
+                return ['A', 'B', 'C'].map((slot) => {
+                  const imageUrl = variations[slot]
+                  if (!imageUrl) return null
+                  const slotColors: Record<string, string> = {
+                    A: 'from-indigo-500 to-violet-500',
+                    B: 'from-emerald-500 to-green-400',
+                    C: 'from-amber-500 to-yellow-400',
+                  }
+                  return (
+                    <div key={slot} className="border border-slate-100 rounded-xl p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${slotColors[slot]} text-white flex items-center justify-center font-bold text-xs shadow-sm`}>
+                          {slot}
+                        </div>
+                        <span className="text-sm text-slate-500 font-medium">{styleLabels[slot]}</span>
                       </div>
-                      <span className="text-sm text-slate-500 font-medium">Image {slot}</span>
+                      <div className="rounded-lg overflow-hidden border border-slate-100">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={imageUrl}
+                          alt={`Variation ${slot} — ${styleLabels[slot]}`}
+                          className="w-full aspect-[1200/628] object-cover"
+                        />
+                      </div>
                     </div>
-                    <div className="rounded-lg overflow-hidden border border-slate-100">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={imageUrl}
-                        alt={`Concept image ${slot}`}
-                        className="w-full aspect-[1200/628] object-cover"
-                      />
-                    </div>
-                  </div>
-                )
-              })}
+                  )
+                })
+              })()}
             </div>
           </div>
         )}
 
-        {/* Step 3: Run Simulation (running) */}
+        {/* Step 4: Run Simulation (running) */}
         {test.status === 'running' && (
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 animate-fadeIn">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-green-400 text-white flex items-center justify-center font-bold text-lg shadow-md">
-                3
+                4
               </div>
               <div className="flex-1">
                 <h2 className="text-lg font-semibold text-slate-900">Run Simulation</h2>

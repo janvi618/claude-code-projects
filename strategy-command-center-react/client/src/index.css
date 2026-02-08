@@ -1,0 +1,180 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Base styles */
+body {
+  @apply bg-slate-900 text-slate-100 min-h-screen;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Glass card effect */
+.glass-card {
+  @apply bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl;
+}
+
+/* Gradient text */
+.gradient-text {
+  @apply bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent;
+}
+
+/* Markdown content styling */
+.markdown-content h2 {
+  @apply text-xl font-bold text-violet-400 mt-6 mb-3 pb-2 border-b border-slate-700;
+}
+
+.markdown-content h3 {
+  @apply text-lg font-semibold text-slate-200 mt-4 mb-2;
+}
+
+.markdown-content p {
+  @apply text-slate-300 mb-3 leading-relaxed;
+}
+
+.markdown-content ul {
+  @apply list-disc list-inside space-y-1 mb-4 text-slate-300;
+}
+
+.markdown-content ol {
+  @apply list-decimal list-inside space-y-1 mb-4 text-slate-300;
+}
+
+.markdown-content li {
+  @apply text-slate-300;
+}
+
+.markdown-content strong {
+  @apply text-slate-100 font-semibold;
+}
+
+.markdown-content table {
+  @apply w-full border-collapse mb-4;
+}
+
+.markdown-content th {
+  @apply bg-slate-700/50 text-left p-2 border border-slate-600 text-slate-200 font-semibold;
+}
+
+.markdown-content td {
+  @apply p-2 border border-slate-600 text-slate-300;
+}
+
+.markdown-content hr {
+  @apply border-slate-600 my-4;
+}
+
+.markdown-content code {
+  @apply bg-slate-700/50 px-1.5 py-0.5 rounded text-violet-300 text-sm;
+}
+
+.markdown-content pre {
+  @apply bg-slate-800 p-4 rounded-lg overflow-x-auto mb-4;
+}
+
+.markdown-content pre code {
+  @apply bg-transparent p-0;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  @apply w-5 h-5 border-2 border-slate-600 border-t-violet-500 rounded-full;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Button styles */
+.btn-primary {
+  @apply bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500
+         text-white font-medium py-2.5 px-5 rounded-lg transition-all duration-200
+         shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40
+         disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-violet-500/25;
+}
+
+.btn-secondary {
+  @apply bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium py-2 px-4 rounded-lg
+         transition-all duration-200 border border-slate-600;
+}
+
+/* Input styles */
+.input-field {
+  @apply w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3
+         text-slate-100 placeholder-slate-400
+         focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent
+         transition-all duration-200;
+}
+
+.textarea-field {
+  @apply w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3
+         text-slate-100 placeholder-slate-400 resize-none
+         focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent
+         transition-all duration-200;
+}
+
+/* Tab styles */
+.tab-button {
+  @apply px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200;
+}
+
+.tab-button.active {
+  @apply bg-violet-600 text-white;
+}
+
+.tab-button:not(.active) {
+  @apply text-slate-400 hover:text-slate-200 hover:bg-slate-700/50;
+}
+
+/* Stakeholder colors */
+.stakeholder-cfo {
+  @apply border-l-4 border-l-emerald-500;
+}
+
+.stakeholder-ceo {
+  @apply border-l-4 border-l-blue-500;
+}
+
+.stakeholder-cmo {
+  @apply border-l-4 border-l-amber-500;
+}
+
+.stakeholder-sales_vp {
+  @apply border-l-4 border-l-rose-500;
+}
+
+/* Progress bar animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(139, 92, 246, 0);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s infinite;
+}

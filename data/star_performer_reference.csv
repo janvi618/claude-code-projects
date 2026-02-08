@@ -1,0 +1,10 @@
+employee_name,department,role,ai_adoption_date,primary_tool,tool_status,primary_metric_improvement,estimated_annual_value_usd
+Maria Elena Gutierrez,Operations,Senior Production Coordinator,2025-04-15,ChatGPT Plus,Unsanctioned,12% shrinkage reduction,180000
+Wendy Schafer,Marketing,Senior Marketing Manager,2025-03-20,Claude Pro,Unsanctioned,6-week competitive intel lead,95000
+Carl Henriksen,Supply Chain,Supply Chain Analyst,2025-05-01,Claude API + Python,Unsanctioned,80% fewer carrier issues,180000
+Amit Chadha,Finance,Senior Financial Analyst,2025-06-15,Claude Pro,Unsanctioned,60% variance analysis time reduction,85000
+Annette Cho,Legal,Legal Operations Manager,2025-04-01,Claude Pro,Unsanctioned,50% contract review time reduction,120000
+Trevor Fong,Customer Insights,Customer Insights Analyst,2025-05-15,Claude Pro,Unsanctioned,2x synthesis cycle speed,75000
+Reggie Cartwright,R&D,R&D Project Manager,2025-06-01,Claude Pro,Unsanctioned,60% patent analysis cost reduction,140000
+Becky Stoltzfus,HR,HR Business Partner,2025-07-01,Claude Pro,Unsanctioned,35% career conversation satisfaction,65000
+Tony Scarpelli,Sales,Regional Sales Director,2025-05-01,Claude Pro,Unsanctioned,15% complex deal win rate improvement,320000

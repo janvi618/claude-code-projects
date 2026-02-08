@@ -74,6 +74,8 @@ export default async function HomePage() {
                           : 'bg-rose-50 text-rose-700 border border-rose-200'
                         : test.status === 'running'
                         ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                        : test.status === 'image_selected'
+                        ? 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200'
                         : test.status === 'images_ready'
                         ? 'bg-violet-50 text-violet-700 border border-violet-200'
                         : 'bg-slate-50 text-slate-600 border border-slate-200'
@@ -81,11 +83,11 @@ export default async function HomePage() {
                       <span>
                         {test.status === 'completed'
                           ? test.results?.recommendation === 'go' ? '🟢' : test.results?.recommendation === 'promising' ? '🟡' : '🔴'
-                          : test.status === 'running' ? '⏳' : test.status === 'images_ready' ? '🎨' : '📋'}
+                          : test.status === 'running' ? '⏳' : test.status === 'image_selected' ? '✨' : test.status === 'images_ready' ? '🎨' : '📋'}
                       </span>
                       {test.status === 'completed'
                         ? test.results?.recommendation.toUpperCase()
-                        : test.status === 'images_ready' ? 'IMAGES READY' : test.status.toUpperCase()}
+                        : test.status === 'image_selected' ? 'IMAGE SELECTED' : test.status === 'images_ready' ? 'IMAGES READY' : test.status.toUpperCase()}
                     </span>
                     {test.results && (
                       <p className="text-sm text-slate-500 mt-1.5 font-medium">

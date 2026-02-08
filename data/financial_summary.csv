@@ -1,0 +1,20 @@
+category,item,annual_cost_usd,annual_value_created_usd,roi_percent,notes
+Enterprise AI,EnterpriseAI.ai Licenses (25000 seats),5400000,0,0%,37% MAU but no measurable productivity gains documented
+Enterprise AI,Consulting and Advisory,800000,0,0%,McKinsey AI readiness assessment and implementation support
+Enterprise AI,Training Programs,500000,0,0%,Moderate completion rates but skills not applied to high-value use cases
+Enterprise AI,Infrastructure and Integration,700000,0,0%,SSO integration and data pipeline costs
+Enterprise AI,Personnel - AI Initiative,600000,0,0%,Jordan's team of 4 FTEs
+Enterprise AI,Total Official AI Spend,8000000,0,0%,CFO assessment: no P&L impact despite 37% adoption
+Star Performers,Maria Elena - Operations,240,180000,74900%,ChatGPT Plus $20/mo - warehouse optimization
+Star Performers,Wendy - Marketing,240,95000,39483%,Claude Pro $20/mo - content and campaign analysis
+Star Performers,Carl - Supply Chain,1200,180000,14900%,Claude API usage - carrier performance analysis
+Star Performers,Amit - Finance,240,85000,35317%,Claude Pro $20/mo - variance analysis automation
+Star Performers,Annette - Legal,240,120000,49900%,Claude Pro $20/mo - contract review acceleration
+Star Performers,Trevor - Customer Insights,240,75000,31150%,Claude Pro $20/mo - NPS analysis pipeline
+Star Performers,Reggie - R&D,240,140000,58233%,Claude Pro $20/mo - technical documentation system
+Star Performers,Becky - HR,240,65000,27000%,Claude Pro $20/mo - policy Q&A and recruiting
+Star Performers,Tony - Sales,240,320000,133233%,Claude Pro $20/mo - RFP response system
+Star Performers,Total Frontier Tool Spend,3360,1260000,37400%,Personal subscriptions - policy violations
+Comparison,Official AI Investment,8000000,0,0%,Sanctioned - no measurable return
+Comparison,Unsanctioned Frontier Use,3360,1260000,37400%,Prohibited - massive return
+Comparison,Gap,7996640,1260000,n/a,"Spending 2381x more for 0x return"

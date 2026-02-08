@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String?   @unique
+  name      String
+  createdAt DateTime  @default(now())
+  projects  Project[]
+}
+
+model Project {
+  id           String        @id @default(cuid())
+  title        String
+  description  String?
+  researchGoal String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  ownerId      String
+  owner        User          @relation(fields: [ownerId], references: [id])
+  sources      Source[]
+  artifacts    Artifact[]
+  opportunities Opportunity[]
+  approvals    Approval[]
+  exports      ExportFile[]
+}
+
+model Source {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  url       String?
+  note      String?
+  tags      String   @default("[]")
+  createdAt DateTime @default(now())
+}
+
+model Artifact {
+  id              String   @id @default(cuid())
+  projectId       String
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  stepNumber      Int
+  opportunityId   String?
+  contentMarkdown String
+  updatedAt       DateTime @updatedAt
+}
+
+model Opportunity {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  selected    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Approval {
+  id         String   @id @default(cuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  stepNumber Int
+  approvedAt DateTime @default(now())
+
+  @@unique([projectId, stepNumber])
+}
+
+model ExportFile {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type      String   @default("pdf")
+  filePath  String
+  createdAt DateTime @default(now())
+}

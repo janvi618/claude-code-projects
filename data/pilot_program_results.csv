@@ -1,0 +1,49 @@
+pilot_name,department,status,month,metric_name,metric_value,target_value,metric_unit,notes
+Customer Insights,Customer Service,Active,2025-06,survey_analysis_time,48,40,hours,Pilot launch
+Customer Insights,Customer Service,Active,2025-07,survey_analysis_time,42,40,hours,Slight improvement
+Customer Insights,Customer Service,Active,2025-08,survey_analysis_time,38,40,hours,Meeting target
+Customer Insights,Customer Service,Active,2025-09,survey_analysis_time,36,40,hours,Exceeding target
+Customer Insights,Customer Service,Active,2025-10,survey_analysis_time,35,40,hours,Stable
+Customer Insights,Customer Service,Active,2025-11,survey_analysis_time,34,40,hours,Stable
+Customer Insights,Customer Service,Active,2025-12,survey_analysis_time,33,40,hours,20% improvement - success
+Customer Insights,Customer Service,Active,2025-06,accuracy_score,72,80,%,Pilot launch
+Customer Insights,Customer Service,Active,2025-07,accuracy_score,75,80,%,Slight improvement
+Customer Insights,Customer Service,Active,2025-08,accuracy_score,78,80,%,Approaching target
+Customer Insights,Customer Service,Active,2025-09,accuracy_score,79,80,%,Near target
+Customer Insights,Customer Service,Active,2025-10,accuracy_score,80,80,%,Meeting target
+Customer Insights,Customer Service,Active,2025-11,accuracy_score,81,80,%,Exceeding target
+Customer Insights,Customer Service,Active,2025-12,accuracy_score,82,80,%,Success
+Customer Insights,Customer Service,Active,2025-06,user_satisfaction,3.2,4.0,score_1to5,Low initial satisfaction
+Customer Insights,Customer Service,Active,2025-07,user_satisfaction,3.4,4.0,score_1to5,Improving
+Customer Insights,Customer Service,Active,2025-08,user_satisfaction,3.5,4.0,score_1to5,Improving
+Customer Insights,Customer Service,Active,2025-09,user_satisfaction,3.6,4.0,score_1to5,Improving
+Customer Insights,Customer Service,Active,2025-10,user_satisfaction,3.7,4.0,score_1to5,Near target
+Customer Insights,Customer Service,Active,2025-11,user_satisfaction,3.8,4.0,score_1to5,Near target
+Customer Insights,Customer Service,Active,2025-12,user_satisfaction,3.8,4.0,score_1to5,Below target - frustration with tool limits
+Marketing Internal Comms,Marketing,Completed,2025-07,draft_time_reduction,12,25,%,Pilot launch - descoped
+Marketing Internal Comms,Marketing,Completed,2025-08,draft_time_reduction,15,25,%,Modest improvement
+Marketing Internal Comms,Marketing,Completed,2025-09,draft_time_reduction,18,25,%,Improvement
+Marketing Internal Comms,Marketing,Completed,2025-10,draft_time_reduction,16,25,%,Plateau
+Marketing Internal Comms,Marketing,Completed,2025-11,draft_time_reduction,17,25,%,Below target
+Marketing Internal Comms,Marketing,Completed,2025-12,draft_time_reduction,18,25,%,Failed to meet target - inconclusive
+Marketing Internal Comms,Marketing,Completed,2025-07,quality_score,3.5,4.0,score_1to5,Pilot launch
+Marketing Internal Comms,Marketing,Completed,2025-08,quality_score,3.6,4.0,score_1to5,Slight improvement
+Marketing Internal Comms,Marketing,Completed,2025-09,quality_score,3.4,4.0,score_1to5,Quality concerns
+Marketing Internal Comms,Marketing,Completed,2025-10,quality_score,3.5,4.0,score_1to5,Inconsistent
+Marketing Internal Comms,Marketing,Completed,2025-11,quality_score,3.6,4.0,score_1to5,Below target
+Marketing Internal Comms,Marketing,Completed,2025-12,quality_score,3.5,4.0,score_1to5,Failed to meet target
+Marketing Internal Comms,Marketing,Completed,2025-07,adoption_rate,45,60,%,Low adoption
+Marketing Internal Comms,Marketing,Completed,2025-08,adoption_rate,52,60,%,Improving
+Marketing Internal Comms,Marketing,Completed,2025-09,adoption_rate,48,60,%,Declining
+Marketing Internal Comms,Marketing,Completed,2025-10,adoption_rate,42,60,%,Further decline
+Marketing Internal Comms,Marketing,Completed,2025-11,adoption_rate,38,60,%,Abandonment
+Marketing Internal Comms,Marketing,Completed,2025-12,adoption_rate,35,60,%,Failed - users prefer manual process
+Supply Chain Optimization,Supply Chain,Delayed,2025-08,status,0,1,binary,Security review pending
+Supply Chain Optimization,Supply Chain,Delayed,2025-09,status,0,1,binary,Architecture review required
+Supply Chain Optimization,Supply Chain,Delayed,2025-10,status,0,1,binary,Resources reallocated to ERP
+Supply Chain Optimization,Supply Chain,Delayed,2025-11,status,0,1,binary,Rescheduled to Q1 2026
+Supply Chain Optimization,Supply Chain,Delayed,2025-12,status,0,1,binary,Still pending - no data
+R&D Innovation,R&D,Never Launched,2025-09,status,0,1,binary,Proposed
+R&D Innovation,R&D,Never Launched,2025-10,status,0,1,binary,Pending steering committee
+R&D Innovation,R&D,Never Launched,2025-11,status,0,1,binary,Deferred to 2026
+R&D Innovation,R&D,Never Launched,2025-12,status,0,1,binary,Never launched

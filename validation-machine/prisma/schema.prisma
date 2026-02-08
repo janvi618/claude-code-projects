@@ -13,8 +13,10 @@ model ValidationTest {
   budget      Int       @default(300)
   maxDuration Int       @default(7)
   stopThreshold Int     @default(50)
-  conceptImages String?  // JSON: {"A": "/generated/...", "B": "...", "C": "..."}
-  status      String    @default("pending") // pending, images_ready, generating, running, completed
+  conceptImages   String?  // JSON: {"A": "/generated/...", "B": "...", "C": "..."}
+  selectedImage   String?  // URL of user's chosen concept image (e.g. "/generated/xyz-B.svg")
+  variationImages String?  // JSON: {"A": "/generated/...", "B": "...", "C": "..."} — style variations of selected concept
+  status      String    @default("pending") // pending, images_ready, image_selected, generating, running, completed
   mode        String    @default("simulation") // simulation, live
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

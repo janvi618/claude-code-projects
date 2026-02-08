@@ -1,0 +1,193 @@
+month,employee_name,department,role,metric_name,metric_value,metric_unit,ai_adoption_date,notes
+2025-01,Maria Elena Gutierrez,Operations,Senior Production Coordinator,inventory_shrinkage_rate,2.8,%,2025-04-15,Baseline
+2025-02,Maria Elena Gutierrez,Operations,Senior Production Coordinator,inventory_shrinkage_rate,2.9,%,2025-04-15,Baseline
+2025-03,Maria Elena Gutierrez,Operations,Senior Production Coordinator,inventory_shrinkage_rate,2.7,%,2025-04-15,Baseline
+2025-04,Maria Elena Gutierrez,Operations,Senior Production Coordinator,inventory_shrinkage_rate,2.8,%,2025-04-15,Started using ChatGPT
+2025-05,Maria Elena Gutierrez,Operations,Senior Production Coordinator,inventory_shrinkage_rate,2.9,%,2025-04-15,Learning period
+2025-06,Maria Elena Gutierrez,Operations,Senior Production Coordinator,inventory_shrinkage_rate,2.6,%,2025-04-15,First improvements
+2025-07,Maria Elena Gutierrez,Operations,Senior Production Coordinator,inventory_shrinkage_rate,2.4,%,2025-04-15,Checklist deployed
+2025-08,Maria Elena Gutierrez,Operations,Senior Production Coordinator,inventory_shrinkage_rate,2.3,%,2025-04-15,Improvement
+2025-09,Maria Elena Gutierrez,Operations,Senior Production Coordinator,inventory_shrinkage_rate,2.2,%,2025-04-15,Improvement
+2025-10,Maria Elena Gutierrez,Operations,Senior Production Coordinator,inventory_shrinkage_rate,2.1,%,2025-04-15,Improvement
+2025-11,Maria Elena Gutierrez,Operations,Senior Production Coordinator,inventory_shrinkage_rate,2.0,%,2025-04-15,Improvement
+2025-12,Maria Elena Gutierrez,Operations,Senior Production Coordinator,inventory_shrinkage_rate,1.9,%,2025-04-15,12% reduction vs baseline
+2025-01,Maria Elena Gutierrez,Operations,Senior Production Coordinator,damage_claims_zone_c,45,count,2025-04-15,Baseline
+2025-02,Maria Elena Gutierrez,Operations,Senior Production Coordinator,damage_claims_zone_c,52,count,2025-04-15,Baseline
+2025-03,Maria Elena Gutierrez,Operations,Senior Production Coordinator,damage_claims_zone_c,48,count,2025-04-15,Baseline
+2025-04,Maria Elena Gutierrez,Operations,Senior Production Coordinator,damage_claims_zone_c,51,count,2025-04-15,Started using ChatGPT
+2025-05,Maria Elena Gutierrez,Operations,Senior Production Coordinator,damage_claims_zone_c,47,count,2025-04-15,Learning period
+2025-06,Maria Elena Gutierrez,Operations,Senior Production Coordinator,damage_claims_zone_c,42,count,2025-04-15,SKU relocation initiated
+2025-07,Maria Elena Gutierrez,Operations,Senior Production Coordinator,damage_claims_zone_c,35,count,2025-04-15,Improvement
+2025-08,Maria Elena Gutierrez,Operations,Senior Production Coordinator,damage_claims_zone_c,28,count,2025-04-15,Improvement
+2025-09,Maria Elena Gutierrez,Operations,Senior Production Coordinator,damage_claims_zone_c,25,count,2025-04-15,Improvement
+2025-10,Maria Elena Gutierrez,Operations,Senior Production Coordinator,damage_claims_zone_c,24,count,2025-04-15,Improvement
+2025-11,Maria Elena Gutierrez,Operations,Senior Production Coordinator,damage_claims_zone_c,22,count,2025-04-15,Improvement
+2025-12,Maria Elena Gutierrez,Operations,Senior Production Coordinator,damage_claims_zone_c,21,count,2025-04-15,40% reduction vs baseline
+2025-01,Wendy Schafer,Marketing,Senior Marketing Manager,competitive_intel_lead_weeks,0,weeks,2025-03-20,Baseline - reactive only
+2025-02,Wendy Schafer,Marketing,Senior Marketing Manager,competitive_intel_lead_weeks,0,weeks,2025-03-20,Baseline - reactive only
+2025-03,Wendy Schafer,Marketing,Senior Marketing Manager,competitive_intel_lead_weeks,1,weeks,2025-03-20,Started Claude process
+2025-04,Wendy Schafer,Marketing,Senior Marketing Manager,competitive_intel_lead_weeks,2,weeks,2025-03-20,Refining prompts
+2025-05,Wendy Schafer,Marketing,Senior Marketing Manager,competitive_intel_lead_weeks,3,weeks,2025-03-20,Process maturing
+2025-06,Wendy Schafer,Marketing,Senior Marketing Manager,competitive_intel_lead_weeks,4,weeks,2025-03-20,Caught sustainability pivot
+2025-07,Wendy Schafer,Marketing,Senior Marketing Manager,competitive_intel_lead_weeks,5,weeks,2025-03-20,Improvement
+2025-08,Wendy Schafer,Marketing,Senior Marketing Manager,competitive_intel_lead_weeks,6,weeks,2025-03-20,Predicted acquisition
+2025-09,Wendy Schafer,Marketing,Senior Marketing Manager,competitive_intel_lead_weeks,6,weeks,2025-03-20,Stable at 6 weeks
+2025-10,Wendy Schafer,Marketing,Senior Marketing Manager,competitive_intel_lead_weeks,6,weeks,2025-03-20,Stable at 6 weeks
+2025-11,Wendy Schafer,Marketing,Senior Marketing Manager,competitive_intel_lead_weeks,7,weeks,2025-03-20,Improvement
+2025-12,Wendy Schafer,Marketing,Senior Marketing Manager,competitive_intel_lead_weeks,6,weeks,2025-03-20,6-7 week average lead
+2025-01,Carl Henriksen,Supply Chain,Supply Chain Analyst,carrier_issues_predicted,0,count,2025-05-01,Baseline - no prediction capability
+2025-02,Carl Henriksen,Supply Chain,Supply Chain Analyst,carrier_issues_predicted,0,count,2025-05-01,Baseline
+2025-03,Carl Henriksen,Supply Chain,Supply Chain Analyst,carrier_issues_predicted,0,count,2025-05-01,Baseline
+2025-04,Carl Henriksen,Supply Chain,Supply Chain Analyst,carrier_issues_predicted,0,count,2025-05-01,Baseline
+2025-05,Carl Henriksen,Supply Chain,Supply Chain Analyst,carrier_issues_predicted,0,count,2025-05-01,Started building system
+2025-06,Carl Henriksen,Supply Chain,Supply Chain Analyst,carrier_issues_predicted,1,count,2025-05-01,First prediction
+2025-07,Carl Henriksen,Supply Chain,Supply Chain Analyst,carrier_issues_predicted,1,count,2025-05-01,Validated prediction
+2025-08,Carl Henriksen,Supply Chain,Supply Chain Analyst,carrier_issues_predicted,2,count,2025-05-01,Two predictions
+2025-09,Carl Henriksen,Supply Chain,Supply Chain Analyst,carrier_issues_predicted,1,count,2025-05-01,One prediction
+2025-10,Carl Henriksen,Supply Chain,Supply Chain Analyst,carrier_issues_predicted,2,count,2025-05-01,Two predictions
+2025-11,Carl Henriksen,Supply Chain,Supply Chain Analyst,carrier_issues_predicted,1,count,2025-05-01,One prediction
+2025-12,Carl Henriksen,Supply Chain,Supply Chain Analyst,carrier_issues_predicted,2,count,2025-05-01,Two predictions
+2025-01,Carl Henriksen,Supply Chain,Supply Chain Analyst,shipping_delays_avoided_usd,0,USD,2025-05-01,Baseline
+2025-02,Carl Henriksen,Supply Chain,Supply Chain Analyst,shipping_delays_avoided_usd,0,USD,2025-05-01,Baseline
+2025-03,Carl Henriksen,Supply Chain,Supply Chain Analyst,shipping_delays_avoided_usd,0,USD,2025-05-01,Baseline
+2025-04,Carl Henriksen,Supply Chain,Supply Chain Analyst,shipping_delays_avoided_usd,0,USD,2025-05-01,Baseline
+2025-05,Carl Henriksen,Supply Chain,Supply Chain Analyst,shipping_delays_avoided_usd,0,USD,2025-05-01,Building system
+2025-06,Carl Henriksen,Supply Chain,Supply Chain Analyst,shipping_delays_avoided_usd,12000,USD,2025-05-01,First save
+2025-07,Carl Henriksen,Supply Chain,Supply Chain Analyst,shipping_delays_avoided_usd,28000,USD,2025-05-01,Major carrier issue avoided
+2025-08,Carl Henriksen,Supply Chain,Supply Chain Analyst,shipping_delays_avoided_usd,35000,USD,2025-05-01,Two carriers flagged
+2025-09,Carl Henriksen,Supply Chain,Supply Chain Analyst,shipping_delays_avoided_usd,22000,USD,2025-05-01,Ongoing savings
+2025-10,Carl Henriksen,Supply Chain,Supply Chain Analyst,shipping_delays_avoided_usd,41000,USD,2025-05-01,Major save
+2025-11,Carl Henriksen,Supply Chain,Supply Chain Analyst,shipping_delays_avoided_usd,18000,USD,2025-05-01,Ongoing savings
+2025-12,Carl Henriksen,Supply Chain,Supply Chain Analyst,shipping_delays_avoided_usd,24000,USD,2025-05-01,YTD $180K avoided
+2025-01,Amit Chadha,Finance,Senior Financial Analyst,variance_analysis_days,5.2,days,2025-06-15,Baseline
+2025-02,Amit Chadha,Finance,Senior Financial Analyst,variance_analysis_days,5.4,days,2025-06-15,Baseline
+2025-03,Amit Chadha,Finance,Senior Financial Analyst,variance_analysis_days,5.1,days,2025-06-15,Baseline
+2025-04,Amit Chadha,Finance,Senior Financial Analyst,variance_analysis_days,5.3,days,2025-06-15,Baseline
+2025-05,Amit Chadha,Finance,Senior Financial Analyst,variance_analysis_days,5.0,days,2025-06-15,Baseline
+2025-06,Amit Chadha,Finance,Senior Financial Analyst,variance_analysis_days,5.2,days,2025-06-15,Started building system
+2025-07,Amit Chadha,Finance,Senior Financial Analyst,variance_analysis_days,4.5,days,2025-06-15,First iteration
+2025-08,Amit Chadha,Finance,Senior Financial Analyst,variance_analysis_days,3.8,days,2025-06-15,Improvement
+2025-09,Amit Chadha,Finance,Senior Financial Analyst,variance_analysis_days,3.2,days,2025-06-15,Improvement
+2025-10,Amit Chadha,Finance,Senior Financial Analyst,variance_analysis_days,2.5,days,2025-06-15,Improvement
+2025-11,Amit Chadha,Finance,Senior Financial Analyst,variance_analysis_days,2.1,days,2025-06-15,60% reduction
+2025-12,Amit Chadha,Finance,Senior Financial Analyst,variance_analysis_days,2.0,days,2025-06-15,60% reduction stable
+2025-01,Annette Cho,Legal,Legal Operations Manager,contract_review_hours,5.2,hours,2025-04-01,Baseline
+2025-02,Annette Cho,Legal,Legal Operations Manager,contract_review_hours,5.5,hours,2025-04-01,Baseline
+2025-03,Annette Cho,Legal,Legal Operations Manager,contract_review_hours,4.8,hours,2025-04-01,Baseline
+2025-04,Annette Cho,Legal,Legal Operations Manager,contract_review_hours,5.0,hours,2025-04-01,Started Claude process
+2025-05,Annette Cho,Legal,Legal Operations Manager,contract_review_hours,4.2,hours,2025-04-01,Refining prompts
+2025-06,Annette Cho,Legal,Legal Operations Manager,contract_review_hours,3.5,hours,2025-04-01,Process maturing
+2025-07,Annette Cho,Legal,Legal Operations Manager,contract_review_hours,3.0,hours,2025-04-01,Improvement
+2025-08,Annette Cho,Legal,Legal Operations Manager,contract_review_hours,2.8,hours,2025-04-01,Improvement
+2025-09,Annette Cho,Legal,Legal Operations Manager,contract_review_hours,2.5,hours,2025-04-01,50% reduction
+2025-10,Annette Cho,Legal,Legal Operations Manager,contract_review_hours,2.4,hours,2025-04-01,Stable
+2025-11,Annette Cho,Legal,Legal Operations Manager,contract_review_hours,2.5,hours,2025-04-01,Stable
+2025-12,Annette Cho,Legal,Legal Operations Manager,contract_review_hours,2.3,hours,2025-04-01,50%+ reduction
+2025-01,Annette Cho,Legal,Legal Operations Manager,contract_issues_caught,12,count,2025-04-01,Baseline
+2025-02,Annette Cho,Legal,Legal Operations Manager,contract_issues_caught,14,count,2025-04-01,Baseline
+2025-03,Annette Cho,Legal,Legal Operations Manager,contract_issues_caught,11,count,2025-04-01,Baseline
+2025-04,Annette Cho,Legal,Legal Operations Manager,contract_issues_caught,13,count,2025-04-01,Started Claude process
+2025-05,Annette Cho,Legal,Legal Operations Manager,contract_issues_caught,15,count,2025-04-01,More issues found
+2025-06,Annette Cho,Legal,Legal Operations Manager,contract_issues_caught,18,count,2025-04-01,AI catches more
+2025-07,Annette Cho,Legal,Legal Operations Manager,contract_issues_caught,21,count,2025-04-01,Improvement
+2025-08,Annette Cho,Legal,Legal Operations Manager,contract_issues_caught,19,count,2025-04-01,Stable higher
+2025-09,Annette Cho,Legal,Legal Operations Manager,contract_issues_caught,22,count,2025-04-01,Improvement
+2025-10,Annette Cho,Legal,Legal Operations Manager,contract_issues_caught,20,count,2025-04-01,Stable higher
+2025-11,Annette Cho,Legal,Legal Operations Manager,contract_issues_caught,23,count,2025-04-01,Improvement
+2025-12,Annette Cho,Legal,Legal Operations Manager,contract_issues_caught,21,count,2025-04-01,65% more issues caught
+2025-01,Trevor Fong,Customer Insights,Customer Insights Analyst,synthesis_cycle_days,14,days,2025-05-15,Baseline - quarterly process
+2025-02,Trevor Fong,Customer Insights,Customer Insights Analyst,synthesis_cycle_days,14,days,2025-05-15,Baseline
+2025-03,Trevor Fong,Customer Insights,Customer Insights Analyst,synthesis_cycle_days,14,days,2025-05-15,Baseline
+2025-04,Trevor Fong,Customer Insights,Customer Insights Analyst,synthesis_cycle_days,14,days,2025-05-15,Baseline
+2025-05,Trevor Fong,Customer Insights,Customer Insights Analyst,synthesis_cycle_days,14,days,2025-05-15,Started building pipeline
+2025-06,Trevor Fong,Customer Insights,Customer Insights Analyst,synthesis_cycle_days,10,days,2025-05-15,First iteration
+2025-07,Trevor Fong,Customer Insights,Customer Insights Analyst,synthesis_cycle_days,7,days,2025-05-15,Weekly becoming possible
+2025-08,Trevor Fong,Customer Insights,Customer Insights Analyst,synthesis_cycle_days,7,days,2025-05-15,Weekly synthesis
+2025-09,Trevor Fong,Customer Insights,Customer Insights Analyst,synthesis_cycle_days,7,days,2025-05-15,Weekly synthesis
+2025-10,Trevor Fong,Customer Insights,Customer Insights Analyst,synthesis_cycle_days,7,days,2025-05-15,Weekly synthesis
+2025-11,Trevor Fong,Customer Insights,Customer Insights Analyst,synthesis_cycle_days,7,days,2025-05-15,Weekly synthesis
+2025-12,Trevor Fong,Customer Insights,Customer Insights Analyst,synthesis_cycle_days,7,days,2025-05-15,2x faster cycle
+2025-01,Trevor Fong,Customer Insights,Customer Insights Analyst,early_issue_detection_days,0,days,2025-05-15,Baseline - no early detection
+2025-02,Trevor Fong,Customer Insights,Customer Insights Analyst,early_issue_detection_days,0,days,2025-05-15,Baseline
+2025-03,Trevor Fong,Customer Insights,Customer Insights Analyst,early_issue_detection_days,0,days,2025-05-15,Baseline
+2025-04,Trevor Fong,Customer Insights,Customer Insights Analyst,early_issue_detection_days,0,days,2025-05-15,Baseline
+2025-05,Trevor Fong,Customer Insights,Customer Insights Analyst,early_issue_detection_days,0,days,2025-05-15,Building pipeline
+2025-06,Trevor Fong,Customer Insights,Customer Insights Analyst,early_issue_detection_days,7,days,2025-05-15,First early detection
+2025-07,Trevor Fong,Customer Insights,Customer Insights Analyst,early_issue_detection_days,14,days,2025-05-15,Earlier detection
+2025-08,Trevor Fong,Customer Insights,Customer Insights Analyst,early_issue_detection_days,21,days,2025-05-15,3 weeks early - quality issue caught
+2025-09,Trevor Fong,Customer Insights,Customer Insights Analyst,early_issue_detection_days,18,days,2025-05-15,Consistent early detection
+2025-10,Trevor Fong,Customer Insights,Customer Insights Analyst,early_issue_detection_days,21,days,2025-05-15,3 weeks early
+2025-11,Trevor Fong,Customer Insights,Customer Insights Analyst,early_issue_detection_days,24,days,2025-05-15,Improving
+2025-12,Trevor Fong,Customer Insights,Customer Insights Analyst,early_issue_detection_days,21,days,2025-05-15,Avg 3 weeks early detection
+2025-01,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_cost,22000,USD,2025-06-01,Baseline - external consultants
+2025-02,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_cost,18000,USD,2025-06-01,Baseline
+2025-03,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_cost,25000,USD,2025-06-01,Baseline
+2025-04,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_cost,20000,USD,2025-06-01,Baseline
+2025-05,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_cost,23000,USD,2025-06-01,Baseline
+2025-06,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_cost,24000,USD,2025-06-01,Started building system
+2025-07,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_cost,18000,USD,2025-06-01,First AI-assisted analysis
+2025-08,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_cost,12000,USD,2025-06-01,Improvement
+2025-09,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_cost,9000,USD,2025-06-01,Major reduction
+2025-10,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_cost,8500,USD,2025-06-01,60% reduction
+2025-11,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_cost,8000,USD,2025-06-01,Stable at 60% reduction
+2025-12,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_cost,7500,USD,2025-06-01,65% reduction vs baseline
+2025-01,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_weeks,6,weeks,2025-06-01,Baseline
+2025-02,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_weeks,5,weeks,2025-06-01,Baseline
+2025-03,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_weeks,6,weeks,2025-06-01,Baseline
+2025-04,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_weeks,5,weeks,2025-06-01,Baseline
+2025-05,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_weeks,6,weeks,2025-06-01,Baseline
+2025-06,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_weeks,5,weeks,2025-06-01,Started building system
+2025-07,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_weeks,4,weeks,2025-06-01,First improvement
+2025-08,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_weeks,3,weeks,2025-06-01,Improvement
+2025-09,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_weeks,2,weeks,2025-06-01,Major reduction
+2025-10,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_weeks,2,weeks,2025-06-01,Stable at 2 weeks
+2025-11,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_weeks,2,weeks,2025-06-01,Stable
+2025-12,Reggie Cartwright,R&D,R&D Project Manager,patent_analysis_weeks,2,weeks,2025-06-01,67% time reduction
+2025-01,Becky Stoltzfus,HR,HR Business Partner,career_conversation_satisfaction,62,%,2025-07-01,Baseline
+2025-02,Becky Stoltzfus,HR,HR Business Partner,career_conversation_satisfaction,58,%,2025-07-01,Baseline
+2025-03,Becky Stoltzfus,HR,HR Business Partner,career_conversation_satisfaction,61,%,2025-07-01,Baseline
+2025-04,Becky Stoltzfus,HR,HR Business Partner,career_conversation_satisfaction,59,%,2025-07-01,Baseline
+2025-05,Becky Stoltzfus,HR,HR Business Partner,career_conversation_satisfaction,63,%,2025-07-01,Baseline
+2025-06,Becky Stoltzfus,HR,HR Business Partner,career_conversation_satisfaction,60,%,2025-07-01,Baseline
+2025-07,Becky Stoltzfus,HR,HR Business Partner,career_conversation_satisfaction,62,%,2025-07-01,Started pilot
+2025-08,Becky Stoltzfus,HR,HR Business Partner,career_conversation_satisfaction,68,%,2025-07-01,First improvements
+2025-09,Becky Stoltzfus,HR,HR Business Partner,career_conversation_satisfaction,74,%,2025-07-01,Improvement
+2025-10,Becky Stoltzfus,HR,HR Business Partner,career_conversation_satisfaction,79,%,2025-07-01,Strong improvement
+2025-11,Becky Stoltzfus,HR,HR Business Partner,career_conversation_satisfaction,82,%,2025-07-01,35% improvement
+2025-12,Becky Stoltzfus,HR,HR Business Partner,career_conversation_satisfaction,84,%,2025-07-01,35%+ improvement
+2025-01,Becky Stoltzfus,HR,HR Business Partner,internal_promotions_pilot_group,0,count,2025-07-01,Baseline - pilot not started
+2025-02,Becky Stoltzfus,HR,HR Business Partner,internal_promotions_pilot_group,0,count,2025-07-01,Baseline
+2025-03,Becky Stoltzfus,HR,HR Business Partner,internal_promotions_pilot_group,0,count,2025-07-01,Baseline
+2025-04,Becky Stoltzfus,HR,HR Business Partner,internal_promotions_pilot_group,0,count,2025-07-01,Baseline
+2025-05,Becky Stoltzfus,HR,HR Business Partner,internal_promotions_pilot_group,0,count,2025-07-01,Baseline
+2025-06,Becky Stoltzfus,HR,HR Business Partner,internal_promotions_pilot_group,0,count,2025-07-01,Baseline
+2025-07,Becky Stoltzfus,HR,HR Business Partner,internal_promotions_pilot_group,0,count,2025-07-01,Pilot started
+2025-08,Becky Stoltzfus,HR,HR Business Partner,internal_promotions_pilot_group,0,count,2025-07-01,Conversations happening
+2025-09,Becky Stoltzfus,HR,HR Business Partner,internal_promotions_pilot_group,1,count,2025-07-01,First promotion
+2025-10,Becky Stoltzfus,HR,HR Business Partner,internal_promotions_pilot_group,0,count,2025-07-01,
+2025-11,Becky Stoltzfus,HR,HR Business Partner,internal_promotions_pilot_group,1,count,2025-07-01,Second promotion
+2025-12,Becky Stoltzfus,HR,HR Business Partner,internal_promotions_pilot_group,1,count,2025-07-01,Third promotion - 3 total
+2025-01,Tony Scarpelli,Sales,Regional Sales Director,complex_deal_win_rate,42,%,2025-05-01,Baseline
+2025-02,Tony Scarpelli,Sales,Regional Sales Director,complex_deal_win_rate,38,%,2025-05-01,Baseline
+2025-03,Tony Scarpelli,Sales,Regional Sales Director,complex_deal_win_rate,45,%,2025-05-01,Baseline
+2025-04,Tony Scarpelli,Sales,Regional Sales Director,complex_deal_win_rate,40,%,2025-05-01,Baseline
+2025-05,Tony Scarpelli,Sales,Regional Sales Director,complex_deal_win_rate,43,%,2025-05-01,Started building system
+2025-06,Tony Scarpelli,Sales,Regional Sales Director,complex_deal_win_rate,44,%,2025-05-01,Early use
+2025-07,Tony Scarpelli,Sales,Regional Sales Director,complex_deal_win_rate,48,%,2025-05-01,Improvement
+2025-08,Tony Scarpelli,Sales,Regional Sales Director,complex_deal_win_rate,52,%,2025-05-01,Strong improvement
+2025-09,Tony Scarpelli,Sales,Regional Sales Director,complex_deal_win_rate,55,%,2025-05-01,Closed stalled deal
+2025-10,Tony Scarpelli,Sales,Regional Sales Director,complex_deal_win_rate,53,%,2025-05-01,Stable higher
+2025-11,Tony Scarpelli,Sales,Regional Sales Director,complex_deal_win_rate,56,%,2025-05-01,15% improvement
+2025-12,Tony Scarpelli,Sales,Regional Sales Director,complex_deal_win_rate,57,%,2025-05-01,15%+ improvement
+2025-01,Tony Scarpelli,Sales,Regional Sales Director,stalled_deals_closed,0,count,2025-05-01,Baseline
+2025-02,Tony Scarpelli,Sales,Regional Sales Director,stalled_deals_closed,0,count,2025-05-01,Baseline
+2025-03,Tony Scarpelli,Sales,Regional Sales Director,stalled_deals_closed,0,count,2025-05-01,Baseline
+2025-04,Tony Scarpelli,Sales,Regional Sales Director,stalled_deals_closed,0,count,2025-05-01,Baseline
+2025-05,Tony Scarpelli,Sales,Regional Sales Director,stalled_deals_closed,0,count,2025-05-01,Building system
+2025-06,Tony Scarpelli,Sales,Regional Sales Director,stalled_deals_closed,0,count,2025-05-01,Using system
+2025-07,Tony Scarpelli,Sales,Regional Sales Director,stalled_deals_closed,0,count,2025-05-01,Relationship building
+2025-08,Tony Scarpelli,Sales,Regional Sales Director,stalled_deals_closed,1,count,2025-05-01,First stalled deal closed
+2025-09,Tony Scarpelli,Sales,Regional Sales Director,stalled_deals_closed,1,count,2025-05-01,Second stalled deal closed
+2025-10,Tony Scarpelli,Sales,Regional Sales Director,stalled_deals_closed,0,count,2025-05-01,
+2025-11,Tony Scarpelli,Sales,Regional Sales Director,stalled_deals_closed,0,count,2025-05-01,
+2025-12,Tony Scarpelli,Sales,Regional Sales Director,stalled_deals_closed,0,count,2025-05-01,2 stalled deals closed YTD

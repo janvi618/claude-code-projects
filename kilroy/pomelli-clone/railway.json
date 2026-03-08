@@ -6,6 +6,9 @@
   },
   "deploy": {
     "startCommand": "npm run start:prod",
-    "restartPolicyType": "ON_FAILURE"
+    "restartPolicyType": "ON_FAILURE",
+    "envVars": [
+      { "name": "SITE_PASSWORD", "required": false }
+    ]
   }
 }

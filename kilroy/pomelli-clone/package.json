@@ -26,6 +26,9 @@
   ],
   "author": "Kilroy Software Factory",
   "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
   "devDependencies": {
     "concurrently": "^8.2.0",
     "tsx": "^4.6.0",

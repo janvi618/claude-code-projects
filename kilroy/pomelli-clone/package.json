@@ -12,12 +12,10 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "tsx server/index.ts",
     "client": "cd client && vite",
-    "build": "cd client && vite build",
+    "build": "cd client && npx vite build",
+    "start:prod": "NODE_ENV=production tsx server/index.ts",
     "start": "npm run dev",
-    "demo": "DEMO_MODE=true npm run dev",
-    "install-all": "npm install && npm run install:client && npm run install:server",
-    "install:client": "cd client && npm install",
-    "install:server": "cd server && npm install"
+    "demo": "DEMO_MODE=true npm run dev"
   },
   "keywords": [
     "ai",

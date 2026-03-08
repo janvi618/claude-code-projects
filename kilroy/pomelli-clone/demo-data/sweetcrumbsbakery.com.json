@@ -1,0 +1,54 @@
+{
+  "url": "https://sweetcrumbsbakery.com",
+  "extracted_at": "2026-03-07T22:00:00.000Z",
+  "confidence": 0.9,
+  
+  "colors": {
+    "primary": ["#D4AF37", "#8B4513"],
+    "secondary": ["#F5DEB3", "#CD853F", "#DEB887"],
+    "background": "#FFFDF7",
+    "text": "#3C2415",
+    "accent": "#FF6B35"
+  },
+  
+  "typography": {
+    "heading_fonts": ["Playfair Display", "serif"],
+    "body_fonts": ["Lora", "Georgia"],
+    "font_style": "elegant"
+  },
+  
+  "imagery": {
+    "has_hero_image": true,
+    "image_count": 12,
+    "image_themes": ["food", "baking", "cozy", "artisan"],
+    "uses_illustrations": false,
+    "dominant_image_mood": "warm"
+  },
+  
+  "voice": {
+    "tone_descriptors": ["warm", "artisanal", "welcoming", "passionate", "homey"],
+    "formality": "casual",
+    "sentence_style": "medium_balanced",
+    "uses_humor": true,
+    "uses_jargon": false,
+    "perspective": "first_person_plural"
+  },
+  
+  "positioning": {
+    "industry_guess": "Artisanal Bakery",
+    "target_audience_guess": "Local food lovers and special occasion customers",
+    "value_proposition": "We create handcrafted baked goods that bring warmth and joy to every celebration",
+    "key_messages": ["Handcrafted with love", "Local ingredients", "Family recipes", "Special occasions"],
+    "differentiators": ["Four-generation family recipes", "Daily fresh baking", "Custom celebration cakes"]
+  },
+  
+  "meta": {
+    "site_title": "Sweet Crumbs Bakery",
+    "meta_description": "Artisanal bakery serving handcrafted pastries, custom cakes, and fresh bread made with love and local ingredients",
+    "pages_analyzed": 3,
+    "total_text_length": 2450,
+    "has_blog": true,
+    "has_ecommerce": true,
+    "social_links": ["https://instagram.com/sweetcrumbsbakery", "https://facebook.com/sweetcrumbsbakery"]
+  }
+}

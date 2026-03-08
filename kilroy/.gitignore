@@ -1,0 +1,18 @@
+.ai/
+.env
+/.worktrees/
+# Root build artifacts.
+/kilroy
+/kilroy.exe
+/restart-*/
+/internal/attractor/engine/cli_wrote.txt
+/internal/attractor/engine/status.json
+/cli_wrote.txt
+/status.json
+/tmp/
+/logs/
+
+# GoReleaser build output
+/dist/
+firebase-debug.log
+.claude/worktrees/

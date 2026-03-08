@@ -1,0 +1,134 @@
+// Pomelli Clone — Kilroy Attractor Pipeline
+// This DOT file defines the full build pipeline for the Pomelli Clone.
+// Kilroy executes this graph node-by-node, checkpointing after each stage.
+//
+// To visualize: dot -Tpng pomelli-pipeline.dot -o pomelli-pipeline.png
+// To validate: kilroy attractor validate --graph pomelli-pipeline.dot
+// To run:      kilroy attractor run --graph pomelli-pipeline.dot --config run.yaml
+
+digraph PomerliClone {
+    graph [
+        goal="Build a Pomelli-style AI marketing tool that extracts Brand DNA from a website URL and generates on-brand social media campaigns. Follow the specs in specs/ exactly.",
+        label="Pomelli Clone — Software Factory Pipeline"
+    ]
+
+    // ─── Terminal Nodes ───
+    start [shape=Mdiamond, label="Start"]
+    exit  [shape=Msquare,  label="Done"]
+
+    // ─── Phase 1: Brand DNA Extractor ───
+    scaffold [
+        label="Scaffold Project",
+        llm_provider=anthropic,
+        llm_model="claude-sonnet-4-20250514",
+        max_tokens=32768,
+        prompt="Initialize a Node.js project with TypeScript. Install dependencies: cheerio, css (npm), axios. Create the directory structure described in specs/pomelli-clone-app.md. Create a .env.example with ANTHROPIC_API_KEY and PORT placeholders. Do NOT implement any logic yet — just the skeleton. When done, write {\"outcome\":\"success\"} to the file at KILROY_STAGE_STATUS_PATH or ./status.json.",
+        max_agent_turns=50
+    ]
+
+    implement_extractor [
+        label="Implement Extractor",
+        llm_provider=anthropic,
+        llm_model="claude-sonnet-4-20250514",
+        max_tokens=32768,
+        prompt="Read specs/brand-dna-extractor.md. Implement the Brand DNA Extractor module exactly as specified. Follow the three-phase architecture (Fetch & Parse, Visual Analysis, AI-Powered Analysis). Implement all error handling described in the spec. The module must export an extract() function matching the interface in the spec. Use the types defined in the spec. When done, write {\"outcome\":\"success\"} to the file at KILROY_STAGE_STATUS_PATH or ./status.json.",
+        max_agent_turns=300
+    ]
+
+    test_extractor [
+        label="Test Extractor",
+        llm_provider=anthropic,
+        llm_model="claude-sonnet-4-20250514",
+        max_tokens=32768,
+        prompt="Run the Brand DNA Extractor against https://example.com. Verify: (1) it returns a valid BrandDNA object with all required fields, (2) all color values are valid hex codes, (3) confidence is between 0 and 1, (4) it completes within 30 seconds. Also test with an invalid URL 'not-a-url' and verify it returns gracefully with confidence 0. If both tests pass, write {\"outcome\":\"success\"} to the file at KILROY_STAGE_STATUS_PATH or ./status.json. If either fails, write {\"outcome\":\"failure\",\"reason\":\"<details>\"} instead.",
+        goal_gate=true,
+        retry_target="implement_extractor"
+    ]
+
+    // ─── Phase 2: Campaign Generator ───
+    implement_generator [
+        label="Implement Generator",
+        llm_provider=anthropic,
+        llm_model="claude-sonnet-4-20250514",
+        max_tokens=32768,
+        prompt="Read specs/campaign-generator.md. Implement the Campaign Generator module exactly as specified. Build the prompt construction carefully — this is the core creative engine. Implement platform-specific validation (especially the 280-char limit for X posts). The module must export a generate() function matching the interface in the spec. Import the BrandDNA types from src/extractor/types.ts. When done, write {\"outcome\":\"success\"} to the file at KILROY_STAGE_STATUS_PATH or ./status.json.",
+        max_agent_turns=300
+    ]
+
+    test_generator [
+        label="Test Generator",
+        llm_provider=anthropic,
+        llm_model="claude-sonnet-4-20250514",
+        max_tokens=32768,
+        prompt="Create a mock BrandDNA object representing a bakery (warm colors, casual tone, food industry). Call the Campaign Generator with this mock and the goal 'promote our new sourdough workshop'. Verify: (1) it returns 3 campaign concepts, (2) each has posts for instagram, linkedin, and x, (3) all X posts are 280 characters or fewer, (4) each concept has a distinct campaign_name, (5) the function completes within 30 seconds. If all checks pass, write {\"outcome\":\"success\"} to the file at KILROY_STAGE_STATUS_PATH or ./status.json. If any fail, write {\"outcome\":\"failure\",\"reason\":\"<details>\"} instead.",
+        goal_gate=true,
+        retry_target="implement_generator"
+    ]
+
+    // ─── Phase 3: Web Application ───
+    implement_app [
+        label="Implement App",
+        llm_provider=anthropic,
+        llm_model="claude-sonnet-4-20250514",
+        max_tokens=32768,
+        prompt="Read specs/pomelli-clone-app.md. Build the Express backend with POST /api/extract and POST /api/generate routes. Build the React frontend with the three-step flow (URL input, Brand DNA card, Campaign results). Follow the visual design tokens in the spec. Implement the loading states with phase text animation. Include the 'Copy' button on social posts. Wire everything together so npm start launches both server and client. When done, write {\"outcome\":\"success\"} to the file at KILROY_STAGE_STATUS_PATH or ./status.json.",
+        max_agent_turns=300
+    ]
+
+    test_app [
+        label="Test App",
+        llm_provider=anthropic,
+        llm_model="claude-sonnet-4-20250514",
+        max_tokens=32768,
+        prompt="Start the application with npm start. Verify: (1) the server responds to GET /api/health with {status: 'ok'}, (2) POST /api/extract with {url: 'https://example.com'} returns a valid BrandDNA JSON, (3) POST /api/generate with a valid BrandDNA and request returns campaign concepts, (4) the React client builds without errors. If all checks pass, write {\"outcome\":\"success\"} to the file at KILROY_STAGE_STATUS_PATH or ./status.json. If any fail, write {\"outcome\":\"failure\",\"reason\":\"<details>\"} instead.",
+        goal_gate=true,
+        retry_target="implement_app"
+    ]
+
+    // ─── Phase 4: Demo Mode + Polish ───
+    implement_demo_mode [
+        label="Add Demo Mode",
+        llm_provider=anthropic,
+        llm_model="claude-sonnet-4-20250514",
+        max_tokens=32768,
+        prompt="Read the 'Demo Mode' section of specs/pomelli-clone-app.md. Create a demo-data/ directory. Generate and save pre-cached BrandDNA profiles for two contrasting websites: one warm/casual brand (like a bakery) and one professional/formal brand (like a law firm). When DEMO_MODE=true is set, the app should load these cached profiles instantly instead of fetching live. Add placeholder URL suggestions to the input field. When done, write {\"outcome\":\"success\"} to the file at KILROY_STAGE_STATUS_PATH or ./status.json.",
+        max_agent_turns=100
+    ]
+
+    polish_ui [
+        label="Polish UI",
+        llm_provider=anthropic,
+        llm_model="claude-sonnet-4-20250514",
+        max_tokens=32768,
+        prompt="Review the running application's UI. Ensure: (1) color swatches in the Brand DNA card render as actual colored circles, (2) the loading animation transitions smoothly between phase messages, (3) the campaign cards have proper spacing and typography, (4) the 'Start Over' button clears all state and returns to step 1, (5) error states show user-friendly messages. Fix any visual issues. When done, write {\"outcome\":\"success\"} to the file at KILROY_STAGE_STATUS_PATH or ./status.json.",
+        max_agent_turns=150
+    ]
+
+    // ─── Human Gate: Final Review ───
+    review [
+        shape=hexagon,
+        label="Review Demo"
+    ]
+
+    // ─── Edges: Control Flow ───
+
+    // Linear flow through phases
+    start -> scaffold -> implement_extractor -> test_extractor
+    test_extractor -> implement_generator   [label="Pass", condition="outcome=success"]
+    test_extractor -> implement_extractor    [label="Fail"]
+
+    implement_generator -> test_generator
+    test_generator -> implement_app          [label="Pass", condition="outcome=success"]
+    test_generator -> implement_generator    [label="Fail"]
+
+    implement_app -> test_app
+    test_app -> implement_demo_mode          [label="Pass", condition="outcome=success"]
+    test_app -> implement_app                [label="Fail"]
+
+    implement_demo_mode -> polish_ui -> review
+
+    // Human gate: approve or send back for fixes
+    review -> exit                           [label="[A] Approve — ship it"]
+    review -> polish_ui                      [label="[F] Fix — more polish needed"]
+    review -> implement_app                  [label="[R] Rework — major issues"]
+}

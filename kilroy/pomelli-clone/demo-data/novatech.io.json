@@ -1,0 +1,54 @@
+{
+  "url": "https://novatech.io",
+  "extracted_at": "2026-03-07T22:00:00.000Z",
+  "confidence": 0.92,
+  
+  "colors": {
+    "primary": ["#6366F1", "#3B82F6"],
+    "secondary": ["#10B981", "#F59E0B", "#8B5CF6"],
+    "background": "#F8FAFC",
+    "text": "#0F172A",
+    "accent": "#EF4444"
+  },
+  
+  "typography": {
+    "heading_fonts": ["Inter", "SF Pro Display"],
+    "body_fonts": ["Inter", "system-ui"],
+    "font_style": "modern"
+  },
+  
+  "imagery": {
+    "has_hero_image": true,
+    "image_count": 15,
+    "image_themes": ["technology", "innovation", "data", "digital"],
+    "uses_illustrations": true,
+    "dominant_image_mood": "energetic"
+  },
+  
+  "voice": {
+    "tone_descriptors": ["innovative", "cutting-edge", "confident", "forward-thinking", "expert"],
+    "formality": "neutral",
+    "sentence_style": "short_punchy",
+    "uses_humor": false,
+    "uses_jargon": true,
+    "perspective": "first_person_plural"
+  },
+  
+  "positioning": {
+    "industry_guess": "Technology & Software",
+    "target_audience_guess": "Enterprise businesses and tech-savvy professionals",
+    "value_proposition": "We accelerate digital transformation with AI-powered solutions that scale",
+    "key_messages": ["AI-first approach", "Enterprise-grade security", "Scalable solutions", "Innovation partners"],
+    "differentiators": ["Proprietary ML algorithms", "99.9% uptime guarantee", "White-glove onboarding"]
+  },
+  
+  "meta": {
+    "site_title": "NovaTech Solutions",
+    "meta_description": "Leading AI and cloud technology solutions for enterprise digital transformation. Scale your business with cutting-edge innovation.",
+    "pages_analyzed": 3,
+    "total_text_length": 2800,
+    "has_blog": true,
+    "has_ecommerce": false,
+    "social_links": ["https://twitter.com/novatech", "https://linkedin.com/company/novatech-solutions", "https://github.com/novatech"]
+  }
+}

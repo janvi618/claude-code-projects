@@ -1,0 +1,75 @@
+# Pomelli Clone — Kilroy Run Configuration
+# This file configures how Kilroy executes the pomelli-pipeline.dot graph.
+#
+# Usage:
+#   kilroy attractor run --graph pomelli-pipeline.dot --config run.yaml
+#
+# Prerequisites:
+#   - ANTHROPIC_API_KEY set in environment
+#   - Claude Code CLI installed (for cli backend)
+#   - Or: use api backend to call Anthropic API directly
+
+version: 1
+
+repo:
+  # Path to the target repository where code will be generated.
+  # Kilroy creates an isolated git worktree here and commits after each stage.
+  # Update this to your actual repo path.
+  path: /home/you/code/pomelli-clone
+
+# CXDB configuration — OPTIONAL for first runs.
+# CXDB provides run history, observability, and resume-from-database.
+# Skip this section entirely on your first weekend. Git checkpoints are enough.
+# Uncomment when you're ready to add observability.
+#
+# cxdb:
+#   binary_addr: 127.0.0.1:9009
+#   http_base_url: http://127.0.0.1:9010
+#   autostart:
+#     enabled: true
+#     command: ["./scripts/start-cxdb.sh"]
+#     wait_timeout_ms: 20000
+#     poll_interval_ms: 250
+
+llm:
+  # cli_profile: real — use "real" for actual API calls, "test" for dry runs
+  cli_profile: real
+
+  providers:
+    # Primary: Anthropic via Claude Code CLI
+    # Kilroy will spawn Claude Code in non-interactive mode for codergen nodes.
+    # This gives the agent full tool access (file editing, bash, etc.)
+    anthropic:
+      backend: cli
+
+    # Alternative: use the API directly (no CLI agent, just raw completions)
+    # Uncomment and switch nodes to this if CLI setup is problematic
+    # anthropic:
+    #   backend: api
+
+    # Secondary: OpenAI via Codex CLI (optional)
+    # Useful for nodes where you want to try a different model.
+    # Activate with: --force-model openai=gpt-5.2-codex
+    openai:
+      backend: cli
+
+    # Tertiary: Google via Gemini CLI (optional)
+    # Activate with: --force-model google=gemini-3-pro-preview
+    google:
+      backend: cli
+
+# Model selection notes:
+#
+# By default, Kilroy picks models based on the provider profile.
+# You can override per-run with --force-model flags:
+#
+#   kilroy attractor run --graph pomelli-pipeline.dot --config run.yaml \
+#     --force-model anthropic=claude-sonnet-4-20250514
+#
+# For the Pomelli Clone, recommended model strategy:
+#   - scaffold, implement_demo_mode, polish_ui → fast model (Sonnet)
+#   - implement_extractor, implement_generator, implement_app → capable model (Opus or Sonnet)
+#   - test nodes → fast model (Sonnet) since they just run and report
+#
+# You can also set per-node model preferences in the DOT file using
+# the llm_model attribute on individual nodes.

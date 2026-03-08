@@ -1,0 +1,1720 @@
+package validate
+
+import (
+	"fmt"
+	"regexp"
+	"strings"
+
+	"github.com/danshapiro/kilroy/internal/attractor/cond"
+	"github.com/danshapiro/kilroy/internal/attractor/model"
+	"github.com/danshapiro/kilroy/internal/attractor/modeldb"
+	"github.com/danshapiro/kilroy/internal/attractor/runtime"
+	"github.com/danshapiro/kilroy/internal/attractor/style"
+)
+
+type Severity string
+
+const (
+	SeverityError   Severity = "ERROR"
+	SeverityWarning Severity = "WARNING"
+	SeverityInfo    Severity = "INFO"
+)
+
+type Diagnostic struct {
+	Rule     string   `json:"rule"`
+	Severity Severity `json:"severity"`
+	Message  string   `json:"message"`
+	NodeID   string   `json:"node_id,omitempty"`
+	EdgeFrom string   `json:"edge_from,omitempty"`
+	EdgeTo   string   `json:"edge_to,omitempty"`
+	Fix      string   `json:"fix,omitempty"`
+}
+
+// LintRule is the interface for custom lint rules that can be passed to
+// Validate via the extra_rules parameter (spec §7.4).
+type LintRule interface {
+	Name() string
+	Apply(g *model.Graph) []Diagnostic
+}
+
+// ValidateOptions carries optional parameters for ValidateWithOptions.
+type ValidateOptions struct {
+	// Catalog is the modeldb catalog used to validate llm_model values in the
+	// model_stylesheet against known model IDs. When nil, model ID catalog checks
+	// are skipped (the stylesheet_syntax check still runs).
+	Catalog *modeldb.Catalog
+}
+
+// Validate runs all built-in lint rules and any extra rules against the graph.
+// Extra rules are appended after built-in rules (spec §7.3).
+func Validate(g *model.Graph, extraRules ...LintRule) []Diagnostic {
+	return ValidateWithOptions(g, ValidateOptions{}, extraRules...)
+}
+
+// ValidateWithOptions runs all built-in lint rules plus catalog-aware checks
+// (when opts.Catalog is non-nil) and any extra rules against the graph.
+func ValidateWithOptions(g *model.Graph, opts ValidateOptions, extraRules ...LintRule) []Diagnostic {
+	var diags []Diagnostic
+	if g == nil {
+		return []Diagnostic{{Rule: "graph_nil", Severity: SeverityError, Message: "graph is nil"}}
+	}
+
+	diags = append(diags, lintStartNode(g)...)
+	diags = append(diags, lintExitNode(g)...)
+	diags = append(diags, lintEdgeTargetsExist(g)...)
+	diags = append(diags, lintStartNoIncoming(g)...)
+	diags = append(diags, lintExitNoOutgoing(g)...)
+	diags = append(diags, lintReachability(g)...)
+	diags = append(diags, lintConditionSyntax(g)...)
+	diags = append(diags, lintStylesheetSyntax(g)...)
+	diags = append(diags, lintStylesheetModelIDs(g, opts.Catalog)...)
+	diags = append(diags, lintRetryTargetsExist(g)...)
+	diags = append(diags, lintGoalGateHasRetry(g)...)
+	diags = append(diags, lintGoalGateMissingNodeRetryTarget(g)...)
+	diags = append(diags, lintGoalGateExitStatusContract(g)...)
+	diags = append(diags, lintGoalGatePromptStatusHint(g)...)
+	diags = append(diags, lintFidelityValid(g)...)
+	diags = append(diags, lintPromptOnCodergenNodes(g)...)
+	diags = append(diags, lintStatusContractInPrompt(g)...)
+	diags = append(diags, lintPromptOnConditionalNodes(g)...)
+	diags = append(diags, lintPromptFileConflict(g)...)
+	diags = append(diags, lintToolCommandRequired(g)...)
+	diags = append(diags, lintValidateScriptFailureContract(g)...)
+	diags = append(diags, lintLLMProviderPresent(g)...)
+	diags = append(diags, lintLoopRestartFailureClassGuard(g)...)
+	diags = append(diags, lintFailLoopFailureClassGuard(g)...)
+	diags = append(diags, lintEscalationModelsSyntax(g)...)
+	diags = append(diags, lintAllConditionalEdges(g)...)
+	diags = append(diags, lintStatusFallbackInPrompt(g)...)
+	diags = append(diags, lintTemplatePostmortemRecoveryRouting(g)...)
+	diags = append(diags, lintOrphanCustomOutcomeHint(g)...)
+	diags = append(diags, lintStatusOutcomeFieldConfusion(g)...)
+	diags = append(diags, lintCustomOutcomeCoverage(g)...)
+	diags = append(diags, lintReservedKeywordNodeID(g)...)
+	diags = append(diags, lintToolCommandAbsPath(g)...)
+
+	// Run custom lint rules (spec §7.3: extra_rules appended after built-in rules).
+	for _, rule := range extraRules {
+		if rule != nil {
+			diags = append(diags, rule.Apply(g)...)
+		}
+	}
+	return diags
+}
+
+func ValidateOrError(g *model.Graph, extraRules ...LintRule) error {
+	diags := Validate(g, extraRules...)
+	var errs []string
+	for _, d := range diags {
+		if d.Severity == SeverityError {
+			errs = append(errs, d.Rule+": "+d.Message)
+		}
+	}
+	if len(errs) > 0 {
+		return fmt.Errorf("validation failed: %s", strings.Join(errs, "; "))
+	}
+	return nil
+}
+
+func lintStartNode(g *model.Graph) []Diagnostic {
+	var ids []string
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		if n.Shape() == "Mdiamond" || n.Shape() == "circle" || strings.EqualFold(id, "start") {
+			ids = append(ids, id)
+		}
+	}
+	if len(ids) != 1 {
+		return []Diagnostic{{
+			Rule:     "start_node",
+			Severity: SeverityError,
+			Message:  fmt.Sprintf("pipeline must have exactly one start node (found %d: %v)", len(ids), ids),
+		}}
+	}
+	return nil
+}
+
+func lintExitNode(g *model.Graph) []Diagnostic {
+	var ids []string
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		if n.Shape() == "Msquare" || n.Shape() == "doublecircle" || strings.EqualFold(id, "exit") || strings.EqualFold(id, "end") {
+			ids = append(ids, id)
+		}
+	}
+	// Spec §7.2: pipeline must have at least one terminal node.
+	if len(ids) == 0 {
+		return []Diagnostic{{
+			Rule:     "terminal_node",
+			Severity: SeverityError,
+			Message:  "pipeline must have at least one exit node (found 0)",
+		}}
+	}
+	return nil
+}
+
+func lintEdgeTargetsExist(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for _, e := range g.Edges {
+		if e == nil {
+			continue
+		}
+		if _, ok := g.Nodes[e.From]; !ok {
+			diags = append(diags, Diagnostic{
+				Rule:     "edge_target_exists",
+				Severity: SeverityError,
+				Message:  "edge references missing from-node",
+				EdgeFrom: e.From,
+				EdgeTo:   e.To,
+			})
+		}
+		if _, ok := g.Nodes[e.To]; !ok {
+			diags = append(diags, Diagnostic{
+				Rule:     "edge_target_exists",
+				Severity: SeverityError,
+				Message:  "edge references missing to-node",
+				EdgeFrom: e.From,
+				EdgeTo:   e.To,
+			})
+		}
+	}
+	return diags
+}
+
+func findStartNodeID(g *model.Graph) string {
+	for id, n := range g.Nodes {
+		if n != nil && (n.Shape() == "Mdiamond" || n.Shape() == "circle") {
+			return id
+		}
+	}
+	for id := range g.Nodes {
+		if strings.EqualFold(id, "start") {
+			return id
+		}
+	}
+	return ""
+}
+
+func findAllStartNodeIDs(g *model.Graph) []string {
+	var ids []string
+	seen := map[string]bool{}
+	for id, n := range g.Nodes {
+		if n != nil && (n.Shape() == "Mdiamond" || n.Shape() == "circle") {
+			if !seen[id] {
+				ids = append(ids, id)
+				seen[id] = true
+			}
+		}
+	}
+	for id := range g.Nodes {
+		if strings.EqualFold(id, "start") && !seen[id] {
+			ids = append(ids, id)
+			seen[id] = true
+		}
+	}
+	return ids
+}
+
+func findExitNodeID(g *model.Graph) string {
+	ids := findAllExitNodeIDs(g)
+	if len(ids) > 0 {
+		return ids[0]
+	}
+	return ""
+}
+
+func findAllExitNodeIDs(g *model.Graph) []string {
+	var ids []string
+	seen := map[string]bool{}
+	for id, n := range g.Nodes {
+		if n != nil && (n.Shape() == "Msquare" || n.Shape() == "doublecircle") {
+			if !seen[id] {
+				ids = append(ids, id)
+				seen[id] = true
+			}
+		}
+	}
+	for id := range g.Nodes {
+		if (strings.EqualFold(id, "exit") || strings.EqualFold(id, "end")) && !seen[id] {
+			ids = append(ids, id)
+			seen[id] = true
+		}
+	}
+	return ids
+}
+
+func lintStartNoIncoming(g *model.Graph) []Diagnostic {
+	start := findStartNodeID(g)
+	if start == "" {
+		return nil
+	}
+	if len(g.Incoming(start)) > 0 {
+		return []Diagnostic{{
+			Rule:     "start_no_incoming",
+			Severity: SeverityError,
+			Message:  "start node must have no incoming edges",
+			NodeID:   start,
+		}}
+	}
+	return nil
+}
+
+func lintExitNoOutgoing(g *model.Graph) []Diagnostic {
+	// Check ALL exit nodes, not just the first one (spec §7.2 allows multiple exit nodes).
+	exitIDs := findAllExitNodeIDs(g)
+	if len(exitIDs) == 0 {
+		return nil
+	}
+	var diags []Diagnostic
+	for _, exit := range exitIDs {
+		if len(g.Outgoing(exit)) > 0 {
+			diags = append(diags, Diagnostic{
+				Rule:     "exit_no_outgoing",
+				Severity: SeverityError,
+				Message:  "exit node must have no outgoing edges",
+				NodeID:   exit,
+			})
+		}
+	}
+	return diags
+}
+
+func lintReachability(g *model.Graph) []Diagnostic {
+	start := findStartNodeID(g)
+	if start == "" {
+		return nil
+	}
+	seen := map[string]bool{start: true}
+	queue := []string{start}
+	for len(queue) > 0 {
+		cur := queue[0]
+		queue = queue[1:]
+		for _, e := range g.Outgoing(cur) {
+			if e == nil {
+				continue
+			}
+			if !seen[e.To] {
+				seen[e.To] = true
+				queue = append(queue, e.To)
+			}
+		}
+	}
+	var diags []Diagnostic
+	for id := range g.Nodes {
+		if !seen[id] {
+			diags = append(diags, Diagnostic{
+				Rule:     "reachability",
+				Severity: SeverityError,
+				Message:  "node is not reachable from start",
+				NodeID:   id,
+			})
+		}
+	}
+	return diags
+}
+
+func lintConditionSyntax(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for _, e := range g.Edges {
+		if e == nil {
+			continue
+		}
+		c := strings.TrimSpace(e.Condition())
+		if c == "" {
+			continue
+		}
+		if err := validateConditionSyntax(c); err != nil {
+			diags = append(diags, Diagnostic{
+				Rule:     "condition_syntax",
+				Severity: SeverityError,
+				Message:  err.Error(),
+				EdgeFrom: e.From,
+				EdgeTo:   e.To,
+			})
+			continue
+		}
+		// NOTE: evalClause error paths are unreachable for inputs that pass
+		// validateConditionSyntax above: SplitN(s, op, 2) on a string that
+		// contains op always yields exactly 2 parts. The Evaluate call below
+		// is retained as a forward-compatibility safety net.
+		//
+		// Also ensure our evaluator can process it. Discard the boolean result
+		// (we are linting with a synthetic outcome, so the match value is
+		// meaningless) but treat an error as a lint failure: it means the
+		// evaluator found something the syntax checker missed, which would
+		// cause a silent mis-route at runtime.
+		if _, evalErr := cond.Evaluate(c, runtime.Outcome{Status: runtime.StatusSuccess}, runtime.NewContext()); evalErr != nil {
+			diags = append(diags, Diagnostic{
+				Rule:     "condition_syntax",
+				Severity: SeverityError,
+				Message:  fmt.Sprintf("condition evaluator rejected expression %q: %v", c, evalErr),
+				EdgeFrom: e.From,
+				EdgeTo:   e.To,
+			})
+		}
+	}
+	return diags
+}
+
+func validateConditionSyntax(condExpr string) error {
+	clauses := strings.Split(condExpr, "&&")
+	for _, clause := range clauses {
+		clause = strings.TrimSpace(clause)
+		if clause == "" {
+			continue
+		}
+		// Disallow known future operators so mistakes don't silently "parse" as bare keys.
+		if strings.ContainsAny(clause, "<>|") {
+			return fmt.Errorf("invalid condition operator in clause %q", clause)
+		}
+		if strings.Contains(clause, "!=") {
+			parts := strings.SplitN(clause, "!=", 2)
+			if len(parts) != 2 {
+				return fmt.Errorf("invalid condition clause %q", clause)
+			}
+			if err := validateCondKey(strings.TrimSpace(parts[0])); err != nil {
+				return err
+			}
+			if strings.TrimSpace(parts[1]) == "" {
+				return fmt.Errorf("invalid condition clause %q: missing literal", clause)
+			}
+			continue
+		}
+		if strings.Contains(clause, "=") {
+			parts := strings.SplitN(clause, "=", 2)
+			if len(parts) != 2 {
+				return fmt.Errorf("invalid condition clause %q", clause)
+			}
+			if err := validateCondKey(strings.TrimSpace(parts[0])); err != nil {
+				return err
+			}
+			if strings.TrimSpace(parts[1]) == "" {
+				return fmt.Errorf("invalid condition clause %q: missing literal", clause)
+			}
+			continue
+		}
+		// Bare key: allow but validate key shape.
+		if err := validateCondKey(strings.TrimSpace(clause)); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func validateCondKey(key string) error {
+	if key == "" {
+		return fmt.Errorf("invalid condition: empty key")
+	}
+	// Allow outcome/preferred_label plus context.* dotted paths. Also allow unqualified dotted paths
+	// (resolve_key supports direct context lookup).
+	if key == "outcome" || key == "preferred_label" {
+		return nil
+	}
+	key = strings.TrimPrefix(key, "context.")
+	for _, part := range strings.Split(key, ".") {
+		if part == "" {
+			return fmt.Errorf("invalid condition key %q", key)
+		}
+		// [A-Za-z_][A-Za-z0-9_]*
+		r0 := part[0]
+		if !isAlphaUnderscore(r0) {
+			return fmt.Errorf("invalid condition key %q", key)
+		}
+		for i := 1; i < len(part); i++ {
+			ch := part[i]
+			if !isAlnumUnderscore(ch) {
+				return fmt.Errorf("invalid condition key %q", key)
+			}
+		}
+	}
+	return nil
+}
+
+func isAlphaUnderscore(ch byte) bool {
+	return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || ch == '_'
+}
+
+func isAlnumUnderscore(ch byte) bool {
+	return isAlphaUnderscore(ch) || (ch >= '0' && ch <= '9')
+}
+
+func lintStylesheetSyntax(g *model.Graph) []Diagnostic {
+	raw := strings.TrimSpace(g.Attrs["model_stylesheet"])
+	if raw == "" {
+		return nil
+	}
+	if _, err := style.ParseStylesheet(raw); err != nil {
+		return []Diagnostic{{
+			Rule:     "stylesheet_syntax",
+			Severity: SeverityError,
+			Message:  err.Error(),
+		}}
+	}
+	return nil
+}
+
+// lintStylesheetModelIDs checks llm_model values in the model_stylesheet against
+// the modeldb catalog. When catalog is nil, the check is skipped silently.
+//
+// Diagnostics emitted:
+//   - stylesheet_unknown_model (WARNING): model ID is not found in the catalog for
+//     the declared provider.
+//   - stylesheet_noncanonical_model_id (ERROR): model ID is found only after
+//     normalizing dashes to dots in version numbers (Anthropic native format).
+//     The canonical catalog form (with dots) must be used instead.
+func lintStylesheetModelIDs(g *model.Graph, catalog *modeldb.Catalog) []Diagnostic {
+	if catalog == nil {
+		return nil
+	}
+	raw := strings.TrimSpace(g.Attrs["model_stylesheet"])
+	if raw == "" {
+		return nil
+	}
+	rules, err := style.ParseStylesheet(raw)
+	if err != nil {
+		// Syntax errors are already reported by lintStylesheetSyntax; skip here.
+		return nil
+	}
+
+	var diags []Diagnostic
+	// Track already-reported (provider, modelID) pairs to avoid duplicate warnings.
+	seen := map[string]bool{}
+	for _, r := range rules {
+		modelID, hasModel := r.Decls["llm_model"]
+		if !hasModel || strings.TrimSpace(modelID) == "" {
+			continue
+		}
+		modelID = strings.TrimSpace(modelID)
+		provider := strings.TrimSpace(r.Decls["llm_provider"])
+
+		key := provider + "|" + modelID
+		if seen[key] {
+			continue
+		}
+		seen[key] = true
+
+		if provider == "" {
+			// Without a provider we cannot do a targeted catalog lookup; skip.
+			continue
+		}
+
+		status := modeldb.LookupModelForProvider(catalog, provider, modelID)
+		switch status {
+		case modeldb.ModelNotFound:
+			diags = append(diags, Diagnostic{
+				Rule:     "stylesheet_unknown_model",
+				Severity: SeverityWarning,
+				Message:  fmt.Sprintf("model_stylesheet: model %q not found in catalog for provider %q", modelID, provider),
+			})
+		case modeldb.ModelFoundNonCanonical:
+			diags = append(diags, Diagnostic{
+				Rule:     "stylesheet_noncanonical_model_id",
+				Severity: SeverityError,
+				Message:  fmt.Sprintf("model_stylesheet: model %q uses non-canonical format; version suffixes must use dots not dashes (e.g. claude-opus-4.6 not claude-opus-4-6)", modelID),
+				Fix:      "replace dashes in the version number suffix with dots: claude-opus-4-6 → claude-opus-4.6",
+			})
+		case modeldb.ModelFoundCanonical, modeldb.ModelProviderUnknown:
+			// No warning: canonical match or catalog has no data for this provider.
+		}
+	}
+	return diags
+}
+
+func lintRetryTargetsExist(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		for _, k := range []string{"retry_target", "fallback_retry_target"} {
+			t := strings.TrimSpace(n.Attr(k, ""))
+			if t == "" {
+				continue
+			}
+			if _, ok := g.Nodes[t]; !ok {
+				diags = append(diags, Diagnostic{
+					Rule:     "retry_target_exists",
+					Severity: SeverityWarning,
+					Message:  fmt.Sprintf("%s references missing node %q", k, t),
+					NodeID:   id,
+				})
+			}
+		}
+	}
+	return diags
+}
+
+func lintGoalGateHasRetry(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		if strings.EqualFold(n.Attr("goal_gate", "false"), "true") {
+			if strings.TrimSpace(n.Attr("retry_target", "")) == "" && strings.TrimSpace(n.Attr("fallback_retry_target", "")) == "" &&
+				strings.TrimSpace(g.Attrs["retry_target"]) == "" && strings.TrimSpace(g.Attrs["fallback_retry_target"]) == "" {
+				diags = append(diags, Diagnostic{
+					Rule:     "goal_gate_has_retry",
+					Severity: SeverityWarning,
+					Message:  "goal_gate node has no retry_target/fallback_retry_target (node or graph)",
+					NodeID:   id,
+				})
+			}
+		}
+	}
+	return diags
+}
+
+// lintGoalGateMissingNodeRetryTarget warns when a goal_gate=true node does not
+// declare its own retry_target or fallback_retry_target. Relying on the
+// graph-level retry_target is insufficient: the graph-level attribute is
+// intended for transient node failures, not goal-gate rejection re-execution.
+// Each goal_gate node should explicitly declare where to route on rejection
+// (typically "postmortem").
+func lintGoalGateMissingNodeRetryTarget(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		if !strings.EqualFold(n.Attr("goal_gate", "false"), "true") {
+			continue
+		}
+		nodeRetry := strings.TrimSpace(n.Attr("retry_target", ""))
+		nodeFallback := strings.TrimSpace(n.Attr("fallback_retry_target", ""))
+		if nodeRetry == "" && nodeFallback == "" {
+			diags = append(diags, Diagnostic{
+				Rule:     "goal_gate_missing_node_retry_target",
+				Severity: SeverityWarning,
+				Message:  "goal_gate node has no node-level retry_target or fallback_retry_target; graph-level retry_target is for transient failures, not goal-gate rejection",
+				NodeID:   id,
+				Fix:      "add retry_target=\"postmortem\" (or the appropriate recovery node) to this node's attributes",
+			})
+		}
+	}
+	return diags
+}
+
+func lintGoalGateExitStatusContract(g *model.Graph) []Diagnostic {
+	exitIDs := findAllExitNodeIDs(g)
+	if len(exitIDs) == 0 {
+		return nil
+	}
+	exitSet := map[string]bool{}
+	for _, id := range exitIDs {
+		exitSet[id] = true
+	}
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil || !strings.EqualFold(n.Attr("goal_gate", "false"), "true") {
+			continue
+		}
+		for _, e := range g.Outgoing(id) {
+			if e == nil || !exitSet[e.To] {
+				continue
+			}
+			statuses := outcomeEqualsStatuses(strings.TrimSpace(e.Condition()))
+			if len(statuses) == 0 {
+				continue
+			}
+			violatesContract := false
+			for _, status := range statuses {
+				if status == runtime.StatusSuccess || status == runtime.StatusPartialSuccess {
+					continue
+				}
+				violatesContract = true
+				break
+			}
+			if !violatesContract {
+				continue
+			}
+			diags = append(diags, Diagnostic{
+				Rule:     "goal_gate_exit_status_contract",
+				Severity: SeverityError,
+				Message:  "goal_gate node routes to terminal on non-success outcome; use outcome=success (or partial_success) to satisfy goal-gate contract",
+				EdgeFrom: e.From,
+				EdgeTo:   e.To,
+				Fix:      "change terminal edge condition to outcome=success or outcome=partial_success",
+			})
+		}
+	}
+	return diags
+}
+
+var outcomeAssignmentPattern = regexp.MustCompile(`(?i)\boutcome\s*=\s*['"]?([a-z0-9_-]+)['"]?`)
+
+func lintGoalGatePromptStatusHint(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil || !strings.EqualFold(n.Attr("goal_gate", "false"), "true") {
+			continue
+		}
+		customOutcome, shouldWarn := firstPromptCustomOutcomeWithoutCanonicalSuccess(n.Prompt())
+		if !shouldWarn {
+			continue
+		}
+		diags = append(diags, Diagnostic{
+			Rule:     "goal_gate_prompt_status_hint",
+			Severity: SeverityWarning,
+			Message:  fmt.Sprintf("goal_gate prompt instructs custom outcome=%s without canonical success outcome; prefer outcome=success (or partial_success) for gate satisfaction", customOutcome),
+			NodeID:   id,
+			Fix:      "update prompt instructions to include outcome=success (or outcome=partial_success) when approved",
+		})
+	}
+	return diags
+}
+
+func outcomeEqualsStatuses(condExpr string) []runtime.StageStatus {
+	var out []runtime.StageStatus
+	for _, clause := range strings.Split(condExpr, "&&") {
+		clause = strings.TrimSpace(clause)
+		if clause == "" || !strings.Contains(clause, "=") || strings.Contains(clause, "!=") || strings.Contains(clause, "==") {
+			continue
+		}
+		parts := strings.SplitN(clause, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		if strings.TrimSpace(parts[0]) != "outcome" {
+			continue
+		}
+		raw := strings.Trim(strings.TrimSpace(parts[1]), "\"'")
+		status, err := runtime.ParseStageStatus(raw)
+		if err != nil {
+			continue
+		}
+		out = append(out, status)
+	}
+	return out
+}
+
+func firstPromptCustomOutcomeWithoutCanonicalSuccess(prompt string) (string, bool) {
+	matches := outcomeAssignmentPattern.FindAllStringSubmatch(prompt, -1)
+	if len(matches) == 0 {
+		return "", false
+	}
+	var custom []string
+	hasCanonicalSuccess := false
+	for _, m := range matches {
+		if len(m) < 2 {
+			continue
+		}
+		status, err := runtime.ParseStageStatus(m[1])
+		if err != nil {
+			continue
+		}
+		if status == runtime.StatusSuccess || status == runtime.StatusPartialSuccess {
+			hasCanonicalSuccess = true
+		}
+		if !status.IsCanonical() {
+			custom = append(custom, string(status))
+		}
+	}
+	if hasCanonicalSuccess || len(custom) == 0 {
+		return "", false
+	}
+	return custom[0], true
+}
+
+func lintFidelityValid(g *model.Graph) []Diagnostic {
+	valid := map[string]bool{
+		"full":           true,
+		"truncate":       true,
+		"compact":        true,
+		"summary:low":    true,
+		"summary:medium": true,
+		"summary:high":   true,
+	}
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		if f := strings.TrimSpace(n.Attr("fidelity", "")); f != "" && !valid[f] {
+			diags = append(diags, Diagnostic{
+				Rule:     "fidelity_valid",
+				Severity: SeverityWarning,
+				Message:  fmt.Sprintf("invalid fidelity value %q", f),
+				NodeID:   id,
+			})
+		}
+	}
+	for _, e := range g.Edges {
+		if e == nil {
+			continue
+		}
+		if f := strings.TrimSpace(e.Attr("fidelity", "")); f != "" && !valid[f] {
+			diags = append(diags, Diagnostic{
+				Rule:     "fidelity_valid",
+				Severity: SeverityWarning,
+				Message:  fmt.Sprintf("invalid fidelity value %q", f),
+				EdgeFrom: e.From,
+				EdgeTo:   e.To,
+			})
+		}
+	}
+	return diags
+}
+
+func lintPromptOnCodergenNodes(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		// Best-effort: default handler is codergen for shape box.
+		if n.Shape() != "box" {
+			continue
+		}
+		if strings.TrimSpace(n.Prompt()) == "" {
+			diags = append(diags, Diagnostic{
+				Rule:     "prompt_on_llm_nodes",
+				Severity: SeverityWarning,
+				Message:  "codergen node has empty prompt (label will be used)",
+				NodeID:   id,
+			})
+		}
+	}
+	return diags
+}
+
+// lintStatusContractInPrompt checks that shape=box nodes reference
+// $KILROY_STAGE_STATUS_PATH in their prompt text.
+// NOTE: This rule only checks shape=box nodes. Future codergen shapes
+// that write status.json should be added here.
+func lintStatusContractInPrompt(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		if n.Shape() != "box" {
+			continue
+		}
+		prompt := n.Prompt()
+		if strings.TrimSpace(prompt) == "" {
+			// Empty prompt — defer to the existing prompt_on_llm_nodes rule.
+			continue
+		}
+		if strings.Contains(prompt, "KILROY_STAGE_STATUS_PATH") ||
+			strings.Contains(prompt, "KILROY_STAGE_STATUS_FALLBACK_PATH") {
+			continue
+		}
+		diags = append(diags, Diagnostic{
+			Rule:     "status_contract_in_prompt",
+			Severity: SeverityWarning,
+			Message:  "codergen node prompt does not reference KILROY_STAGE_STATUS_PATH or KILROY_STAGE_STATUS_FALLBACK_PATH; node cannot write status.json and custom outcome routing will be lost",
+			NodeID:   id,
+			Fix:      "add instructions to write $KILROY_STAGE_STATUS_PATH with the appropriate outcome",
+		})
+	}
+	return diags
+}
+
+func lintPromptOnConditionalNodes(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		if n.Shape() != "diamond" {
+			continue
+		}
+		// Diamond nodes use the ConditionalHandler, which is a pure
+		// pass-through that never executes prompts.  A prompt attribute
+		// on a diamond is almost certainly a mistake — the author likely
+		// intended shape=box (codergen) so the prompt actually runs.
+		if strings.TrimSpace(n.Prompt()) != "" {
+			diags = append(diags, Diagnostic{
+				Rule:     "prompt_on_conditional_node",
+				Severity: SeverityWarning,
+				Message:  "diamond (conditional) node has a prompt that will be ignored; use shape=box if the prompt should execute",
+				NodeID:   id,
+			})
+		}
+	}
+	return diags
+}
+
+func lintLLMProviderPresent(g *model.Graph) []Diagnostic {
+	// Kilroy metaspec: if llm_provider is missing after stylesheet resolution, fail.
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		if n.Shape() != "box" {
+			continue
+		}
+		if strings.TrimSpace(n.Attr("llm_provider", "")) == "" {
+			diags = append(diags, Diagnostic{
+				Rule:     "llm_provider_required",
+				Severity: SeverityError,
+				Message:  "codergen node missing llm_provider (Kilroy forbids provider auto-detection)",
+				NodeID:   id,
+			})
+		}
+	}
+	return diags
+}
+
+func lintToolCommandRequired(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		if !nodeResolvesToTool(n) {
+			continue
+		}
+		if strings.TrimSpace(n.Attr("tool_command", "")) != "" {
+			continue
+		}
+
+		msg := "tool node missing tool_command attribute"
+		fix := "set tool_command=\"...\""
+		if strings.TrimSpace(n.Attr("command", "")) != "" {
+			msg = "tool node uses command attribute; expected tool_command"
+			fix = "rename command=... to tool_command=..."
+		}
+
+		diags = append(diags, Diagnostic{
+			Rule:     "tool_command_required",
+			Severity: SeverityError,
+			Message:  msg,
+			NodeID:   id,
+			Fix:      fix,
+		})
+	}
+	return diags
+}
+
+// lintValidateScriptFailureContract checks that any tool_command delegating to
+// a runtime-authored validate script (sh scripts/validate-*.sh) also includes a
+// KILROY_VALIDATE_FAILURE fallback so postmortem receives an actionable repair
+// signal when the script is missing or exits before printing its own output.
+func lintValidateScriptFailureContract(g *model.Graph) []Diagnostic {
+	validateScriptRe := regexp.MustCompile(`\bsh\s+scripts/validate-[^\s"']+\.sh\b`)
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil || !nodeResolvesToTool(n) {
+			continue
+		}
+		cmd := n.Attr("tool_command", "")
+		if !validateScriptRe.MatchString(cmd) {
+			continue
+		}
+		if strings.Contains(cmd, "KILROY_VALIDATE_FAILURE") {
+			continue
+		}
+		diags = append(diags, Diagnostic{
+			Rule:     "validate_script_failure_contract",
+			Severity: SeverityWarning,
+			Message:  fmt.Sprintf("tool_command calls sh scripts/validate-*.sh but has no KILROY_VALIDATE_FAILURE fallback; postmortem cannot identify a missing or crashing script"),
+			NodeID:   id,
+			Fix:      `append || { echo "KILROY_VALIDATE_FAILURE: <stage> script missing or failed — postmortem must write scripts/validate-<stage>.sh"; exit 1; } to tool_command`,
+		})
+	}
+	return diags
+}
+
+func nodeResolvesToTool(n *model.Node) bool {
+	typeOverride := strings.TrimSpace(n.Attr("type", ""))
+	if typeOverride != "" {
+		return typeOverride == "tool"
+	}
+	return n.Shape() == "parallelogram"
+}
+
+func lintLoopRestartFailureClassGuard(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	// Track nodes that have a properly-guarded transient restart edge.
+	guardedRestartSources := map[string]bool{}
+	for _, e := range g.Edges {
+		if e == nil {
+			continue
+		}
+		if !strings.EqualFold(strings.TrimSpace(e.Attr("loop_restart", "false")), "true") {
+			continue
+		}
+		condExpr := strings.TrimSpace(e.Condition())
+		// Skip edges exclusively conditioned on success (not a failure path).
+		if condExpr != "" && !conditionMentionsFailureOutcome(condExpr) {
+			continue
+		}
+		if conditionHasTransientInfraGuard(condExpr) {
+			guardedRestartSources[e.From] = true
+			continue
+		}
+		diags = append(diags, Diagnostic{
+			Rule:     "loop_restart_failure_class_guard",
+			Severity: SeverityWarning,
+			Message:  "loop_restart=true requires condition guarded by context.failure_class=transient_infra",
+			EdgeFrom: e.From,
+			EdgeTo:   e.To,
+			Fix:      "add condition with context.failure_class=transient_infra or remove loop_restart=true",
+		})
+	}
+	// Second pass: nodes with a guarded transient restart must also have a
+	// companion non-restart edge for deterministic failures.
+	for from := range guardedRestartSources {
+		hasDeterministicFallback := false
+		for _, e := range g.Edges {
+			if e == nil || e.From != from {
+				continue
+			}
+			if strings.EqualFold(strings.TrimSpace(e.Attr("loop_restart", "false")), "true") {
+				continue
+			}
+			condExpr := strings.TrimSpace(e.Condition())
+			if conditionRoutesFailOutcome(condExpr) && !conditionHasTransientInfraGuard(condExpr) {
+				hasDeterministicFallback = true
+				break
+			}
+		}
+		if !hasDeterministicFallback {
+			diags = append(diags, Diagnostic{
+				Rule:     "loop_restart_failure_class_guard",
+				Severity: SeverityWarning,
+				Message:  "node with transient-infra loop_restart must also have a non-restart edge for deterministic failures",
+				EdgeFrom: from,
+				Fix:      "add an edge for outcome=fail && context.failure_class!=transient_infra without loop_restart",
+			})
+		}
+	}
+	return diags
+}
+
+func lintFailLoopFailureClassGuard(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for _, e := range g.Edges {
+		if e == nil {
+			continue
+		}
+		fromNode := g.Nodes[e.From]
+		if fromNode == nil || fromNode.Shape() != "diamond" {
+			continue
+		}
+		condExpr := strings.TrimSpace(e.Condition())
+		if !conditionMentionsFailureOutcome(condExpr) {
+			continue
+		}
+		// Only warn for back-edges into nodes that can reach this diamond.
+		if !graphReachable(g, e.To, e.From) {
+			continue
+		}
+		if conditionReferencesFailureClass(condExpr) {
+			continue
+		}
+		diags = append(diags, Diagnostic{
+			Rule:     "fail_loop_failure_class_guard",
+			Severity: SeverityWarning,
+			Message:  "failure back-edge from conditional node should guard retry path with context.failure_class and provide deterministic fallback routing",
+			EdgeFrom: e.From,
+			EdgeTo:   e.To,
+			Fix:      "split fail loop edge into failure_class-aware routes",
+		})
+	}
+	return diags
+}
+
+func conditionMentionsFailureOutcome(condExpr string) bool {
+	for _, clause := range strings.Split(condExpr, "&&") {
+		clause = strings.TrimSpace(clause)
+		if clause == "" {
+			continue
+		}
+		if strings.Contains(clause, "!=") {
+			parts := strings.SplitN(clause, "!=", 2)
+			if len(parts) != 2 {
+				continue
+			}
+			key := strings.TrimSpace(parts[0])
+			val := strings.Trim(strings.ToLower(strings.TrimSpace(parts[1])), "\"'")
+			if key == "outcome" && val == "success" {
+				return true
+			}
+			continue
+		}
+		if !strings.Contains(clause, "=") {
+			continue
+		}
+		parts := strings.SplitN(clause, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		key := strings.TrimSpace(parts[0])
+		val := strings.Trim(strings.ToLower(strings.TrimSpace(parts[1])), "\"'")
+		if key != "outcome" {
+			continue
+		}
+		if val == "fail" || val == "retry" || val == "partial_success" {
+			return true
+		}
+	}
+	return false
+}
+
+// conditionRoutesFailOutcome returns true if the condition will route
+// outcome=fail traffic — specifically outcome=fail or outcome!=success.
+// Unlike conditionMentionsFailureOutcome, this excludes outcome=retry and
+// outcome=partial_success which do not catch deterministic fail outcomes.
+func conditionRoutesFailOutcome(condExpr string) bool {
+	for _, clause := range strings.Split(condExpr, "&&") {
+		clause = strings.TrimSpace(clause)
+		if clause == "" {
+			continue
+		}
+		if strings.Contains(clause, "!=") {
+			parts := strings.SplitN(clause, "!=", 2)
+			if len(parts) == 2 {
+				key := strings.TrimSpace(parts[0])
+				val := strings.Trim(strings.ToLower(strings.TrimSpace(parts[1])), "\"'")
+				if key == "outcome" && val == "success" {
+					return true
+				}
+			}
+			continue
+		}
+		if !strings.Contains(clause, "=") {
+			continue
+		}
+		parts := strings.SplitN(clause, "=", 2)
+		if len(parts) == 2 {
+			key := strings.TrimSpace(parts[0])
+			val := strings.Trim(strings.ToLower(strings.TrimSpace(parts[1])), "\"'")
+			if key == "outcome" && val == "fail" {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func conditionHasTransientInfraGuard(condExpr string) bool {
+	for _, clause := range strings.Split(condExpr, "&&") {
+		clause = strings.TrimSpace(clause)
+		if !strings.Contains(clause, "=") || strings.Contains(clause, "!=") {
+			continue
+		}
+		parts := strings.SplitN(clause, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		key := strings.TrimSpace(parts[0])
+		val := strings.Trim(strings.ToLower(strings.TrimSpace(parts[1])), "\"'")
+		if key == "context.failure_class" || key == "failure_class" {
+			if val == "transient_infra" {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func conditionReferencesFailureClass(condExpr string) bool {
+	for _, clause := range strings.Split(condExpr, "&&") {
+		clause = strings.TrimSpace(clause)
+		if clause == "" {
+			continue
+		}
+		var key string
+		if strings.Contains(clause, "!=") {
+			parts := strings.SplitN(clause, "!=", 2)
+			if len(parts) != 2 {
+				continue
+			}
+			key = strings.TrimSpace(parts[0])
+		} else if strings.Contains(clause, "=") {
+			parts := strings.SplitN(clause, "=", 2)
+			if len(parts) != 2 {
+				continue
+			}
+			key = strings.TrimSpace(parts[0])
+		} else {
+			continue
+		}
+		if key == "context.failure_class" || key == "failure_class" {
+			return true
+		}
+	}
+	return false
+}
+
+func graphReachable(g *model.Graph, fromID string, targetID string) bool {
+	if g == nil {
+		return false
+	}
+	fromID = strings.TrimSpace(fromID)
+	targetID = strings.TrimSpace(targetID)
+	if fromID == "" || targetID == "" {
+		return false
+	}
+	if fromID == targetID {
+		return true
+	}
+	type void struct{}
+	seen := map[string]void{}
+	queue := []string{fromID}
+	for len(queue) > 0 {
+		cur := queue[0]
+		queue = queue[1:]
+		if _, ok := seen[cur]; ok {
+			continue
+		}
+		seen[cur] = void{}
+		for _, e := range g.Outgoing(cur) {
+			if e == nil {
+				continue
+			}
+			next := strings.TrimSpace(e.To)
+			if next == "" {
+				continue
+			}
+			if next == targetID {
+				return true
+			}
+			if _, ok := seen[next]; !ok {
+				queue = append(queue, next)
+			}
+		}
+	}
+	return false
+}
+
+func lintPromptFileConflict(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		pf := strings.TrimSpace(n.Attr("prompt_file", ""))
+		if pf == "" {
+			continue
+		}
+		// prompt_file should have been resolved by the engine's expandPromptFiles transform
+		// before validation runs. If it's still present, either RepoPath wasn't set (e.g.
+		// standalone validate) or the transform didn't run. Warn so the user knows.
+		hasPrompt := strings.TrimSpace(n.Attr("prompt", "")) != "" || strings.TrimSpace(n.Attr("llm_prompt", "")) != ""
+		if hasPrompt {
+			diags = append(diags, Diagnostic{
+				Rule:     "prompt_file_conflict",
+				Severity: SeverityError,
+				Message:  fmt.Sprintf("node has both prompt_file and prompt/llm_prompt — use one or the other"),
+				NodeID:   id,
+				Fix:      "remove either prompt_file or prompt",
+			})
+		}
+	}
+	return diags
+}
+
+func lintEscalationModelsSyntax(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		raw := strings.TrimSpace(n.Attr("escalation_models", ""))
+		if raw == "" {
+			continue
+		}
+		for _, entry := range strings.Split(raw, ",") {
+			entry = strings.TrimSpace(entry)
+			if entry == "" {
+				continue
+			}
+			idx := strings.Index(entry, ":")
+			if idx < 0 {
+				diags = append(diags, Diagnostic{
+					Rule:     "escalation_models_syntax",
+					Severity: SeverityWarning,
+					Message:  fmt.Sprintf("escalation_models entry %q missing colon separator (expected provider:model)", entry),
+					NodeID:   id,
+					Fix:      "use provider:model format, e.g. \"anthropic:claude-opus-4-6\"",
+				})
+				continue
+			}
+			prov := strings.ToLower(strings.TrimSpace(entry[:idx]))
+			mod := strings.TrimSpace(entry[idx+1:])
+			if prov == "" {
+				diags = append(diags, Diagnostic{
+					Rule:     "escalation_models_syntax",
+					Severity: SeverityWarning,
+					Message:  fmt.Sprintf("escalation_models entry %q has empty provider", entry),
+					NodeID:   id,
+				})
+			}
+			if mod == "" {
+				diags = append(diags, Diagnostic{
+					Rule:     "escalation_models_syntax",
+					Severity: SeverityWarning,
+					Message:  fmt.Sprintf("escalation_models entry %q has empty model", entry),
+					NodeID:   id,
+				})
+			}
+		}
+	}
+	return diags
+}
+
+// TypeKnownRule implements LintRule for the spec §7.2 "type_known" rule.
+// It warns when a node's explicit type override is not in the set of known
+// handler types. The known types are provided at construction time so the
+// validate package does not depend on the engine's handler registry.
+type TypeKnownRule struct {
+	KnownTypes map[string]bool
+}
+
+func NewTypeKnownRule(knownTypes []string) *TypeKnownRule {
+	m := make(map[string]bool, len(knownTypes))
+	for _, t := range knownTypes {
+		m[t] = true
+	}
+	return &TypeKnownRule{KnownTypes: m}
+}
+
+func (r *TypeKnownRule) Name() string { return "type_known" }
+
+func (r *TypeKnownRule) Apply(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		t := strings.TrimSpace(n.Attr("type", ""))
+		if t == "" {
+			continue
+		}
+		if !r.KnownTypes[t] {
+			diags = append(diags, Diagnostic{
+				Rule:     "type_known",
+				Severity: SeverityWarning,
+				Message:  fmt.Sprintf("node type %q is not recognized by the handler registry", t),
+				NodeID:   id,
+			})
+		}
+	}
+	return diags
+}
+
+var toolCommandAbsPathPattern = regexp.MustCompile(`cd\s+/`)
+
+func lintToolCommandAbsPath(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		if !nodeResolvesToTool(n) {
+			continue
+		}
+		cmd := strings.TrimSpace(n.Attr("tool_command", ""))
+		if cmd == "" {
+			continue
+		}
+		if toolCommandAbsPathPattern.MatchString(cmd) {
+			diags = append(diags, Diagnostic{
+				Rule:     "tool_command_abs_path",
+				Severity: SeverityWarning,
+				Message:  fmt.Sprintf("tool_command contains 'cd /…' which overrides the engine worktree CWD"),
+				NodeID:   id,
+				Fix:      "remove the 'cd /…' prefix; the engine sets the working directory to the worktree automatically",
+			})
+		}
+	}
+	return diags
+}
+
+// lintAllConditionalEdges warns when a non-terminal node has outgoing edges but
+// all are conditional (no unconditional fallback). This creates a routing gap:
+// if no condition matches at runtime, the engine has no edge to follow.
+func lintAllConditionalEdges(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	exitIDs := make(map[string]bool)
+	for _, id := range findAllExitNodeIDs(g) {
+		exitIDs[id] = true
+	}
+	startIDs := make(map[string]bool)
+	for _, id := range findAllStartNodeIDs(g) {
+		startIDs[id] = true
+	}
+
+	// Build per-node outgoing edge lists.
+	outgoing := make(map[string][]*model.Edge)
+	for _, e := range g.Edges {
+		if e != nil {
+			outgoing[e.From] = append(outgoing[e.From], e)
+		}
+	}
+
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		// Skip terminal nodes (no outgoing edges expected).
+		if exitIDs[id] {
+			continue
+		}
+		// Skip start nodes (always have unconditional edges by convention).
+		if startIDs[id] {
+			continue
+		}
+		edges := outgoing[id]
+		if len(edges) == 0 {
+			continue // no outgoing edges — other lint rules handle this
+		}
+		allConditional := true
+		for _, e := range edges {
+			if strings.TrimSpace(e.Condition()) == "" {
+				allConditional = false
+				break
+			}
+		}
+		if allConditional {
+			diags = append(diags, Diagnostic{
+				Rule:     "all_conditional_edges",
+				Severity: SeverityError,
+				NodeID:   id,
+				Message:  fmt.Sprintf("node %q has %d outgoing edge(s) but all are conditional; add an unconditional fallback edge to avoid routing gaps", id, len(edges)),
+				Fix:      "Add an unconditional edge (no condition attribute) as a fallback route",
+			})
+		}
+	}
+	return diags
+}
+
+func lintTemplatePostmortemRecoveryRouting(g *model.Graph) []Diagnostic {
+	if g == nil {
+		return nil
+	}
+	if strings.TrimSpace(g.Attrs["provenance_version"]) == "" {
+		return nil
+	}
+	if g.Nodes["postmortem"] == nil {
+		return nil
+	}
+
+	var diags []Diagnostic
+	hasAnyNeedsReplan := false
+
+	for _, e := range g.Outgoing("postmortem") {
+		if e == nil {
+			continue
+		}
+		cond := strings.TrimSpace(e.Condition())
+		to := strings.TrimSpace(e.To)
+
+		if cond == "outcome=needs_replan" {
+			hasAnyNeedsReplan = true
+			if to != "plan_fanout" {
+				diags = append(diags, Diagnostic{
+					Rule:     "template_postmortem_replan_entry",
+					Severity: SeverityWarning,
+					NodeID:   "postmortem",
+					EdgeFrom: e.From,
+					EdgeTo:   e.To,
+					Message:  "template-provenance graph routes needs_replan to a non-planning-entry node; route to plan_fanout",
+					Fix:      "set postmortem -> plan_fanout [condition=\"outcome=needs_replan\"]",
+				})
+			}
+		}
+
+		if cond == "" && to == "check_toolchain" {
+			diags = append(diags, Diagnostic{
+				Rule:     "template_postmortem_broad_rollback",
+				Severity: SeverityWarning,
+				NodeID:   "postmortem",
+				EdgeFrom: e.From,
+				EdgeTo:   e.To,
+				Message:  "template-provenance graph has unconditional postmortem rollback to check_toolchain",
+				Fix:      "use conditional routing (impl_repair/needs_replan/needs_toolchain) and keep unconditional fallback to implement",
+			})
+		}
+	}
+
+	if !hasAnyNeedsReplan {
+		diags = append(diags, Diagnostic{
+			Rule:     "template_postmortem_replan_entry",
+			Severity: SeverityWarning,
+			NodeID:   "postmortem",
+			Message:  "template-provenance graph is missing postmortem needs_replan route to plan_fanout",
+			Fix:      "add postmortem -> plan_fanout [condition=\"outcome=needs_replan\"]",
+		})
+	}
+
+	return diags
+}
+
+// lintOrphanCustomOutcomeHint warns when a node has custom outcome routing
+// (condition="outcome=<non-reserved-value>") but no unconditional fallback edge.
+// A typo'd custom outcome string will have no valid route, silently routing
+// through to unintended edges or falling through entirely. The unconditional
+// fallback provides a safety net for unexpected outcome values.
+func lintOrphanCustomOutcomeHint(g *model.Graph) []Diagnostic {
+	if g == nil {
+		return nil
+	}
+
+	// Build per-node outgoing edge lists.
+	outgoing := make(map[string][]*model.Edge)
+	for _, e := range g.Edges {
+		if e != nil {
+			outgoing[e.From] = append(outgoing[e.From], e)
+		}
+	}
+
+	var diags []Diagnostic
+	for id := range g.Nodes {
+		edges := outgoing[id]
+		if len(edges) == 0 {
+			continue
+		}
+
+		hasCustomOutcomeEdge := false
+		hasUnconditionalEdge := false
+
+		for _, e := range edges {
+			cond := strings.TrimSpace(e.Condition())
+			if cond == "" {
+				hasUnconditionalEdge = true
+				continue
+			}
+			if edgeHasCustomOutcomeCondition(cond) {
+				hasCustomOutcomeEdge = true
+			}
+		}
+
+		if hasCustomOutcomeEdge && !hasUnconditionalEdge {
+			diags = append(diags, Diagnostic{
+				Rule:     "orphan_custom_outcome_hint",
+				Severity: SeverityWarning,
+				NodeID:   id,
+				Message:  "node has custom outcome routing but no unconditional fallback — a typo'd outcome string will have no valid route",
+				Fix:      "add an unconditional fallback edge to handle unexpected outcome values",
+			})
+		}
+	}
+	return diags
+}
+
+// edgeHasCustomOutcomeCondition returns true if the condition expression contains
+// at least one outcome=<value> clause where <value> is NOT a reserved outcome
+// (success, partial_success, retry, fail, skipped and their aliases).
+func edgeHasCustomOutcomeCondition(condExpr string) bool {
+	for _, clause := range strings.Split(condExpr, "&&") {
+		clause = strings.TrimSpace(clause)
+		if clause == "" {
+			continue
+		}
+		// Only look at equality comparisons (not !=).
+		if strings.Contains(clause, "!=") {
+			continue
+		}
+		if !strings.Contains(clause, "=") {
+			continue
+		}
+		parts := strings.SplitN(clause, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		key := strings.TrimSpace(parts[0])
+		if key != "outcome" {
+			continue
+		}
+		val := strings.Trim(strings.TrimSpace(parts[1]), "\"'")
+		// Check if this is a reserved (canonical) outcome value.
+		status, err := runtime.ParseStageStatus(val)
+		if err != nil {
+			// Unparseable value — treat as custom.
+			return true
+		}
+		if !status.IsCanonical() {
+			return true
+		}
+	}
+	return false
+}
+
+// statusOutcomeFieldConfusionRe matches the antipattern where an agent is
+// instructed to write a JSON object that has both "status":"success" (or any
+// canonical status) and a separate "outcome":"..." key.  The runtime decoder
+// unmarshals into Outcome{Status: ...} and silently discards any "outcome" key,
+// so custom routing via condition="outcome=X" will never fire.
+var statusOutcomeFieldConfusionRe = regexp.MustCompile(
+	`(?i)["']?status["']?\s*:\s*["']?(?:success|fail|retry|skipped|partial_success)["']?[^}]{0,80}["']?outcome["']?\s*:`)
+
+// lintStatusOutcomeFieldConfusion detects prompts that instruct agents to write
+// {"status":"success","outcome":"..."} — a JSON shape where the "outcome" field
+// is silently ignored by DecodeOutcomeJSON.  Custom routing must use the status
+// field directly: {"status":"more_work"} not {"status":"success","outcome":"more_work"}.
+//
+// Rule: status_outcome_field_confusion (ERROR)
+func lintStatusOutcomeFieldConfusion(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil || n.Shape() != "box" {
+			continue
+		}
+		prompt := n.Prompt()
+		if !statusOutcomeFieldConfusionRe.MatchString(prompt) {
+			continue
+		}
+		diags = append(diags, Diagnostic{
+			Rule:     "status_outcome_field_confusion",
+			Severity: SeverityError,
+			NodeID:   id,
+			Message:  `prompt instructs agent to write {"status":"<canonical>","outcome":"..."} — the "outcome" JSON key is silently discarded by the runtime decoder; only the "status" field drives edge-condition matching`,
+			Fix:      `replace {"status":"success","outcome":"X"} with {"status":"X"} — custom routing uses status as the routing value, e.g. condition="outcome=X" matches {"status":"X"}`,
+		})
+	}
+	return diags
+}
+
+// promptStatusWriteRe extracts values from "status":"VALUE" patterns inside
+// what look like JSON status-write instructions in a prompt.
+var promptStatusWriteRe = regexp.MustCompile(`["']status["']\s*:\s*["']([a-zA-Z0-9_-]+)["']`)
+
+// lintCustomOutcomeCoverage checks that for every custom outcome condition on an
+// outgoing edge (e.g. condition="outcome=more_work"), the source node's prompt
+// contains at least one JSON write with "status":"more_work".  A missing match
+// means the agent will never emit the status value the edge requires, so the
+// conditional edge is permanently dead.
+//
+// Rule: custom_outcome_coverage (WARNING)
+func lintCustomOutcomeCoverage(g *model.Graph) []Diagnostic {
+	outgoing := make(map[string][]*model.Edge)
+	for _, e := range g.Edges {
+		if e != nil {
+			outgoing[e.From] = append(outgoing[e.From], e)
+		}
+	}
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil || n.Shape() != "box" {
+			continue
+		}
+		prompt := n.Prompt()
+		if strings.TrimSpace(prompt) == "" {
+			continue
+		}
+
+		// Collect the set of custom outcome values required by outgoing edges.
+		required := map[string]bool{}
+		for _, e := range outgoing[id] {
+			cond := strings.TrimSpace(e.Condition())
+			if cond == "" {
+				continue
+			}
+			for _, clause := range strings.Split(cond, "&&") {
+				clause = strings.TrimSpace(clause)
+				if strings.Contains(clause, "!=") || !strings.Contains(clause, "=") {
+					continue
+				}
+				parts := strings.SplitN(clause, "=", 2)
+				if len(parts) != 2 || strings.TrimSpace(parts[0]) != "outcome" {
+					continue
+				}
+				val := strings.Trim(strings.TrimSpace(parts[1]), "\"'")
+				st, err := runtime.ParseStageStatus(val)
+				if err != nil || !st.IsCanonical() {
+					required[val] = true
+				}
+			}
+		}
+		if len(required) == 0 {
+			continue
+		}
+
+		// Collect what status values the prompt actually writes.
+		written := map[string]bool{}
+		for _, m := range promptStatusWriteRe.FindAllStringSubmatch(prompt, -1) {
+			if len(m) >= 2 {
+				written[strings.ToLower(m[1])] = true
+			}
+		}
+
+		for val := range required {
+			if !written[strings.ToLower(val)] {
+				diags = append(diags, Diagnostic{
+					Rule:     "custom_outcome_coverage",
+					Severity: SeverityWarning,
+					NodeID:   id,
+					Message:  fmt.Sprintf(`outgoing edge requires condition="outcome=%s" but prompt contains no \"status\":\"%s\" write instruction — the conditional edge will never fire`, val, val),
+					Fix:      fmt.Sprintf(`add a status write case to the prompt: echo '{"status":"%s"}' > "$KILROY_STAGE_STATUS_PATH"`, val),
+				})
+			}
+		}
+	}
+	return diags
+}
+
+// lintStatusFallbackInPrompt warns when a codergen (shape=box) node's prompt
+// references the primary status path ($KILROY_STAGE_STATUS_PATH) but omits the
+// fallback path ($KILROY_STAGE_STATUS_FALLBACK_PATH). Without a fallback, a
+// failed primary write leaves the engine with no recovery signal.
+//
+// Rule: status_fallback_in_prompt (WARNING)
+func lintStatusFallbackInPrompt(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id, n := range g.Nodes {
+		if n == nil {
+			continue
+		}
+		if n.Shape() != "box" {
+			continue
+		}
+		if strings.EqualFold(strings.TrimSpace(n.Attr("auto_status", "false")), "true") {
+			continue
+		}
+		prompt := n.Prompt()
+		hasPrimary := strings.Contains(prompt, "KILROY_STAGE_STATUS_PATH")
+		hasFallback := strings.Contains(prompt, "KILROY_STAGE_STATUS_FALLBACK_PATH")
+		if hasPrimary && !hasFallback {
+			diags = append(diags, Diagnostic{
+				Rule:     "status_fallback_in_prompt",
+				Severity: SeverityWarning,
+				Message:  "codergen node prompt references $KILROY_STAGE_STATUS_PATH but omits $KILROY_STAGE_STATUS_FALLBACK_PATH; if the primary write fails the engine has no recovery signal",
+				NodeID:   id,
+				Fix:      "add $KILROY_STAGE_STATUS_FALLBACK_PATH alongside $KILROY_STAGE_STATUS_PATH in the node prompt",
+			})
+		}
+	}
+	return diags
+}
+
+// dotReservedKeywords is the set of DOT/Graphviz keywords that must not be
+// used as node IDs. Using any of these causes silent routing failures because
+// the DOT parser interprets them as language keywords rather than node names.
+var dotReservedKeywords = map[string]bool{
+	"graph":    true,
+	"digraph":  true,
+	"subgraph": true,
+	"node":     true,
+	"edge":     true,
+	"strict":   true,
+	"if":       true,
+}
+
+// lintReservedKeywordNodeID warns when any node ID is a DOT/Graphviz reserved
+// keyword. A node named "if" (for example) will never be reachable via normal
+// DOT routing and always represents LLM confusion.
+func lintReservedKeywordNodeID(g *model.Graph) []Diagnostic {
+	var diags []Diagnostic
+	for id := range g.Nodes {
+		if dotReservedKeywords[strings.ToLower(id)] {
+			diags = append(diags, Diagnostic{
+				Rule:     "reserved_keyword_node_id",
+				Severity: SeverityWarning,
+				Message:  fmt.Sprintf("node ID %q is a DOT/Graphviz reserved keyword and will cause routing failures", id),
+				NodeID:   id,
+				Fix:      fmt.Sprintf("rename node %q to a non-reserved identifier (e.g. %q)", id, id+"_node"),
+			})
+		}
+	}
+	return diags
+}

@@ -1,0 +1,54 @@
+{
+  "url": "https://acmelaw.com",
+  "extracted_at": "2026-03-07T22:00:00.000Z",
+  "confidence": 0.85,
+  
+  "colors": {
+    "primary": ["#1A365D", "#2B77AD"],
+    "secondary": ["#E2E8F0", "#4A5568", "#718096"],
+    "background": "#FFFFFF",
+    "text": "#1A202C",
+    "accent": "#C53030"
+  },
+  
+  "typography": {
+    "heading_fonts": ["Times New Roman", "serif"],
+    "body_fonts": ["Arial", "Helvetica"],
+    "font_style": "classic"
+  },
+  
+  "imagery": {
+    "has_hero_image": true,
+    "image_count": 8,
+    "image_themes": ["professional", "courthouse", "legal", "corporate"],
+    "uses_illustrations": false,
+    "dominant_image_mood": "professional"
+  },
+  
+  "voice": {
+    "tone_descriptors": ["authoritative", "trustworthy", "professional", "experienced", "reliable"],
+    "formality": "formal",
+    "sentence_style": "long_detailed",
+    "uses_humor": false,
+    "uses_jargon": true,
+    "perspective": "first_person_plural"
+  },
+  
+  "positioning": {
+    "industry_guess": "Legal Services",
+    "target_audience_guess": "Businesses and individuals needing legal representation",
+    "value_proposition": "We provide comprehensive legal expertise with a track record of successful outcomes",
+    "key_messages": ["25+ years experience", "Client-focused approach", "Proven results", "Full-service firm"],
+    "differentiators": ["Multi-state bar admission", "Corporate and personal law expertise", "24/7 emergency consultation"]
+  },
+  
+  "meta": {
+    "site_title": "ACME Law Firm",
+    "meta_description": "Experienced legal professionals providing comprehensive legal services for businesses and individuals across multiple practice areas",
+    "pages_analyzed": 3,
+    "total_text_length": 3200,
+    "has_blog": true,
+    "has_ecommerce": false,
+    "social_links": ["https://linkedin.com/company/acmelaw"]
+  }
+}

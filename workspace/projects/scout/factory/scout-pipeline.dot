@@ -1,0 +1,115 @@
+digraph scout_mvp {
+  graph [label="SCOUT MVP Build Pipeline" labelloc="t" fontsize=16];
+  node [shape=box style=rounded];
+
+  // ── Phase 1: Infrastructure ──
+  start [label="start" shape=ellipse];
+  infra_docker [label="Create Docker Compose stack\n(Postgres+pgvector, Redis, Caddy)" type=codergen];
+  infra_schema [label="Create PostgreSQL schema\n(all tables, indexes, pgvector extension)" type=codergen];
+  infra_backend [label="Scaffold FastAPI backend\n(project structure, config, env loading)" type=codergen];
+  infra_frontend [label="Scaffold Next.js frontend\n(project structure, Tailwind, shadcn/ui)" type=codergen];
+  infra_validate [label="Validate infrastructure boots\n(docker compose up, health checks)" type=codergen];
+
+  start -> infra_docker;
+  infra_docker -> infra_schema;
+  infra_docker -> infra_backend;
+  infra_docker -> infra_frontend;
+  infra_schema -> infra_validate;
+  infra_backend -> infra_validate;
+  infra_frontend -> infra_validate;
+
+  // ── Phase 2: LLM Client ──
+  llm_client [label="Build unified LLM client\n(Anthropic, OpenAI, Google providers)" type=codergen];
+  llm_test [label="Test LLM client\n(live calls to each provider)" type=codergen];
+
+  infra_validate -> llm_client;
+  llm_client -> llm_test;
+
+  // ── Phase 3: Data Collection ──
+  collectors_rss [label="Build RSS collector module\n(feedparser, normalize to RawContent)" type=codergen];
+  collectors_scrape [label="Build web scraper module\n(httpx + BeautifulSoup, Playwright fallback)" type=codergen];
+  collectors_api [label="Build API collector module\n(PubMed Entrez, SEC EDGAR)" type=codergen];
+  collectors_scheduler [label="Build collection scheduler\n(APScheduler, cadence configs)" type=codergen];
+  collectors_dedup [label="Build deduplication logic\n(SHA-256 content hashing)" type=codergen];
+  collectors_test [label="Test collectors against\n3 live sources (RSS, scrape, API)" type=codergen];
+
+  llm_test -> collectors_rss;
+  llm_test -> collectors_scrape;
+  llm_test -> collectors_api;
+  collectors_rss -> collectors_dedup;
+  collectors_scrape -> collectors_dedup;
+  collectors_api -> collectors_dedup;
+  collectors_dedup -> collectors_scheduler;
+  collectors_scheduler -> collectors_test;
+
+  // ── Phase 4: Intelligence Processing ──
+  extraction [label="Build extraction pipeline\n(Claude Sonnet structured extraction)" type=codergen];
+  scoring [label="Build relevance scoring\n(Gemini Flash 0-100 scoring)" type=codergen];
+  embedding [label="Build embedding generation\n(OpenAI text-embedding-3-small + pgvector)" type=codergen];
+  processing_test [label="Test full pipeline\n(collect → extract → score → embed)" type=codergen];
+
+  collectors_test -> extraction;
+  extraction -> scoring;
+  scoring -> embedding;
+  embedding -> processing_test;
+
+  // ── Phase 5: Daily Brief ──
+  brief_synthesis [label="Build brief synthesis\n(Claude Opus, structured brief format)" type=codergen];
+  brief_email [label="Build email delivery\n(Resend API, HTML template)" type=codergen];
+  brief_scheduler [label="Build brief scheduler\n(6:30 AM CT weekday cron)" type=codergen];
+  brief_test [label="Test brief generation\n(mock data → brief → validate format)" type=codergen];
+
+  processing_test -> brief_synthesis;
+  brief_synthesis -> brief_email;
+  brief_email -> brief_scheduler;
+  brief_scheduler -> brief_test;
+
+  // ── Phase 6: Authentication ──
+  auth [label="Build NextAuth.js magic-link auth\n(login flow, session management, roles)" type=codergen];
+  auth_middleware [label="Build API auth middleware\n(session validation, role checks)" type=codergen];
+
+  infra_validate -> auth;
+  auth -> auth_middleware;
+
+  // ── Phase 7: Dashboard UI ──
+  ui_feed [label="Build Intelligence Feed view\n(filtered list, company chips, scores)" type=codergen];
+  ui_briefs [label="Build Brief Archive view\n(calendar, brief display, PDF export)" type=codergen];
+  ui_chat [label="Build Research Chat view\n(chat UI, RAG pipeline, citations)" type=codergen];
+  ui_admin [label="Build Admin dashboard\n(sources, users, health, API keys)" type=codergen];
+  ui_layout [label="Build shared layout\n(nav bar, responsive design, auth gates)" type=codergen];
+
+  auth_middleware -> ui_layout;
+  brief_test -> ui_briefs;
+  processing_test -> ui_feed;
+  processing_test -> ui_chat;
+  ui_layout -> ui_feed;
+  ui_layout -> ui_briefs;
+  ui_layout -> ui_chat;
+  ui_layout -> ui_admin;
+
+  // ── Phase 8: Integration ──
+  integration [label="Full integration test\n(end-to-end: collect → process → brief → UI)" type=codergen];
+  alerts [label="Build alert system\n(score >= 85 triggers email)" type=codergen];
+  source_health [label="Build source health monitoring\n(consecutive failure tracking, admin alerts)" type=codergen];
+
+  ui_feed -> integration;
+  ui_briefs -> integration;
+  ui_chat -> integration;
+  ui_admin -> integration;
+  integration -> alerts;
+  integration -> source_health;
+
+  // ── Phase 9: Production Hardening ──
+  docker_prod [label="Create production Docker Compose\n(resource limits, restart policies, Caddy HTTPS)" type=codergen];
+  seed_data [label="Seed competitor list and\nsource configurations" type=codergen];
+  documentation [label="Write deployment guide\n(setup, config, API keys, domain)" type=codergen];
+
+  alerts -> docker_prod;
+  source_health -> docker_prod;
+  docker_prod -> seed_data;
+  seed_data -> documentation;
+
+  // ── Exit ──
+  done [label="exit" shape=ellipse];
+  documentation -> done;
+}

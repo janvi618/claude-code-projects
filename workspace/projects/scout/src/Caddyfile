@@ -1,0 +1,34 @@
+# TODO: Replace YOUR_DOMAIN with your actual domain (e.g., scout.yourdomain.com)
+# Caddy will automatically provision a TLS certificate via Let's Encrypt.
+
+YOUR_DOMAIN {
+    # Reverse proxy /api and /health requests to the FastAPI backend
+    reverse_proxy /api/* backend:8000
+    reverse_proxy /health backend:8000
+
+    # Reverse proxy everything else to the Next.js frontend
+    reverse_proxy /* frontend:3000
+
+    # Security headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        -Server
+    }
+
+    # Logging
+    log {
+        output file /var/log/caddy/access.log {
+            roll_size 100mb
+            roll_keep 5
+            roll_keep_for 720h
+        }
+    }
+}
+
+# Redirect www to apex (uncomment if needed)
+# www.YOUR_DOMAIN {
+#     redir https://YOUR_DOMAIN{uri} permanent
+# }

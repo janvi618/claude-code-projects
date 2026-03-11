@@ -1,0 +1,43 @@
+version: 1
+
+repo:
+  path: .
+
+cxdb:
+  autostart:
+    enabled: false  # Start without CXDB for simplicity; enable later for observability
+
+llm:
+  cli_profile: real
+  providers:
+    anthropic:
+      backend: cli   # Uses Claude Code CLI
+    openai:
+      backend: cli   # Uses Codex CLI
+    google:
+      backend: api
+      api:
+        protocol: google_gemini
+        api_key_env: GOOGLE_API_KEY
+
+# Default model preferences per provider
+# Override with: --force-model anthropic=claude-sonnet-4-20250514
+modeldb:
+  defaults:
+    anthropic: claude-sonnet-4-20250514
+    openai: gpt-4o
+    google: gemini-2.0-flash
+
+# Pipeline-specific settings
+pipeline:
+  # Working directory for agent output
+  worktree_base: .kilroy/worktrees
+
+  # Commit after each successful node
+  commit_per_node: true
+
+  # Maximum retries per node before failing the run
+  max_retries_per_node: 3
+
+  # Timeout per node (seconds) - 15 minutes
+  node_timeout_seconds: 900

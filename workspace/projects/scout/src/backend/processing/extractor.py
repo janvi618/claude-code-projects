@@ -81,7 +81,7 @@ async def extract_intelligence(raw_content, gm_context: str) -> Optional[Intelli
 
     title = raw_content.title or ""
     body = (raw_content.body or "")[:8000]  # Cap to avoid token overflow
-    source_name = raw_content.metadata.get("feed_url", raw_content.url or "Unknown source")
+    source_name = raw_content.extra_metadata.get("feed_url", raw_content.url or "Unknown source")
 
     if not body.strip():
         logger.warning("Skipping extraction for empty body: raw_content_id=%s", raw_content.id)
@@ -162,7 +162,7 @@ def _validate_and_create(data: dict, raw_content) -> IntelligenceItemCreate:
         sentiment=sentiment,
         strategic_relevance=strategic_relevance,
         source_url=raw_content.url,
-        source_name=raw_content.metadata.get("feed_url") or raw_content.url,
+        source_name=raw_content.extra_metadata.get("feed_url") or raw_content.url,
         published_at=raw_content.published_at,
     )
 

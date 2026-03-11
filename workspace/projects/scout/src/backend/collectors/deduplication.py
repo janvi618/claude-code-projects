@@ -53,7 +53,7 @@ class Deduplicator:
                 published_at=item.published_at,
                 collected_at=datetime.now(timezone.utc),
                 content_hash=item.content_hash,
-                metadata=item.metadata,
+                metadata=item.extra_metadata,
                 processed=False,
             )
             self.db.add(raw)

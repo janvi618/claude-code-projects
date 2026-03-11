@@ -27,5 +27,5 @@ class RawContent(Base):
         nullable=False, server_default=func.now()
     )
     content_hash: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
-    metadata: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    extra_metadata: Mapped[dict] = mapped_column("metadata", JSONB, nullable=False, default=dict)
     processed: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)

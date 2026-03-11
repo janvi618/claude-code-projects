@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import Boolean, ForeignKey, Integer, String, Text, func
-from sqlalchemy.dialects.postgresql import JSONB, TIMESTAMPTZ, UUID
+from sqlalchemy.dialects.postgresql import JSONB, UUID 
 from sqlalchemy.orm import Mapped, mapped_column
 
 from pgvector.sqlalchemy import Vector
@@ -34,8 +34,8 @@ class IntelligenceItem(Base):
     embedding: Mapped[list | None] = mapped_column(Vector(1536))
     source_url: Mapped[str | None] = mapped_column(String(2000))
     source_name: Mapped[str | None] = mapped_column(String(200))
-    published_at: Mapped[datetime | None] = mapped_column(TIMESTAMPTZ)
+    published_at: Mapped[datetime | None] = mapped_column()
     processed_at: Mapped[datetime] = mapped_column(
-        TIMESTAMPTZ, nullable=False, server_default=func.now()
+        nullable=False, server_default=func.now()
     )
     alerted: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)

@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import Boolean, ForeignKey, Integer, String, func
-from sqlalchemy.dialects.postgresql import JSONB, TIMESTAMPTZ, UUID
+from sqlalchemy.dialects.postgresql import JSONB, UUID 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from models.base import Base
@@ -26,10 +26,10 @@ class Source(Base):
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     healthy: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     consecutive_failures: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    last_collected_at: Mapped[datetime | None] = mapped_column(TIMESTAMPTZ)
+    last_collected_at: Mapped[datetime | None] = mapped_column()
     config_json: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
     created_at: Mapped[datetime] = mapped_column(
-        TIMESTAMPTZ, nullable=False, server_default=func.now()
+        nullable=False, server_default=func.now()
     )
 
     competitor = relationship("Competitor", lazy="select")

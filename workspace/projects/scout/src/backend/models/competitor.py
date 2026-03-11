@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import Boolean, CheckConstraint, Integer, String, func
-from sqlalchemy.dialects.postgresql import JSONB, TIMESTAMPTZ, UUID
+from sqlalchemy.dialects.postgresql import JSONB, UUID 
 from sqlalchemy.orm import Mapped, mapped_column
 
 from models.base import Base
@@ -27,5 +27,5 @@ class Competitor(Base):
     monitoring_keywords: Mapped[dict] = mapped_column(JSONB, nullable=False, default=list)
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     created_at: Mapped[datetime] = mapped_column(
-        TIMESTAMPTZ, nullable=False, server_default=func.now()
+        nullable=False, server_default=func.now()
     )

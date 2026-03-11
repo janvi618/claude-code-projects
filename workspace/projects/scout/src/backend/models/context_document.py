@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import String, Text, func
-from sqlalchemy.dialects.postgresql import TIMESTAMPTZ, UUID
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from models.base import Base
@@ -19,5 +19,5 @@ class ContextDocument(Base):
     key: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
-        TIMESTAMPTZ, nullable=False, server_default=func.now(), onupdate=func.now()
+        nullable=False, server_default=func.now(), onupdate=func.now()
     )

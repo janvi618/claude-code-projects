@@ -16,7 +16,7 @@ pgvector==0.3.6
 python-jose[cryptography]==3.3.0
 passlib==1.7.4
 python-multipart==0.0.20
-resend==2.5.0
+resend==2.5.1
 pydantic-settings==2.7.0
 redis==5.2.1
 python-dotenv==1.0.1

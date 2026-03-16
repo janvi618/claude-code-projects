@@ -7,8 +7,8 @@ WORKDIR /app
 
 # Install dependencies
 FROM base AS deps
-COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install --frozen-lockfile 2>/dev/null || pnpm install
+COPY package.json ./
+RUN pnpm install
 
 # Build
 FROM base AS builder

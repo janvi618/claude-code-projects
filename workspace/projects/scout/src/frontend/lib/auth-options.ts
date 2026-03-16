@@ -2,7 +2,11 @@
  * NextAuth configuration — kept in lib/ so it can be imported without
  * going through the [...nextauth] dynamic route path (which webpack
  * cannot resolve as a module import).
+ *
+ * server-only ensures this file (and nodemailer) never gets bundled
+ * into the client-side JavaScript bundle.
  */
+import "server-only";
 
 import { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";

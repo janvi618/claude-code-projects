@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { getBriefs, getBriefByDate, getLatestBrief, generateBrief, BriefSummary, DailyBrief } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { formatDate, cn } from "@/lib/utils";
-import { isAdmin } from "@/lib/auth";
+import { isAdmin } from "@/lib/auth-utils";
 
 export default function BriefsPage() {
   const { data: session } = useSession();

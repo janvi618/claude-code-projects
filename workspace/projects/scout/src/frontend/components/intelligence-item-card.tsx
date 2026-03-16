@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IntelligenceItem } from "@/lib/api";
 import { Badge } from "./ui/badge";
 import { formatRelativeTime, cn } from "@/lib/utils";
-import { getCompanyColor, getScoreBg, DOMAIN_LABELS } from "@/lib/auth";
+import { getCompanyColor, getScoreBg, DOMAIN_LABELS } from "@/lib/auth-utils";
 
 interface IntelligenceItemCardProps {
   item: IntelligenceItem;

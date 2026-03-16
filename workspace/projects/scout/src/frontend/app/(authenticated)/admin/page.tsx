@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate, formatRelativeTime, cn } from "@/lib/utils";
-import { isAdmin } from "@/lib/auth";
+import { isAdmin } from "@/lib/auth-utils";
 import { redirect } from "next/navigation";
 
 type Tab = "sources" | "users" | "health";

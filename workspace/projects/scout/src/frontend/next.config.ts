@@ -2,6 +2,20 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  serverExternalPackages: ["nodemailer"],
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        dns: false,
+        tls: false,
+        crypto: false,
+      };
+    }
+    return config;
+  },
   // Rewrite /api/* calls to the FastAPI backend
   // In production, Caddy handles routing — this is for local dev
   async rewrites() {

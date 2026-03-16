@@ -5,7 +5,7 @@ import { getItems, IntelligenceItem, ItemFilters } from "@/lib/api";
 import { IntelligenceItemCard } from "@/components/intelligence-item-card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { DOMAIN_LABELS } from "@/lib/auth";
+import { DOMAIN_LABELS } from "@/lib/auth-utils";
 
 const COMPETITORS = [
   "Conagra", "Kraft Heinz", "Nestlé", "PepsiCo",

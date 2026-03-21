@@ -125,6 +125,7 @@ export const authOptions: NextAuthOptions = {
         (session.user as { id?: string; role?: string }).id = user.id;
         (session.user as { id?: string; role?: string }).role =
           (user as { role?: string }).role || "viewer";
+        (session as any).accessToken = user.id;
       }
       return session;
     },

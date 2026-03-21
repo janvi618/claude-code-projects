@@ -7,13 +7,15 @@ the frontend service (use Docker network isolation, not exposed to internet).
 import logging
 import uuid
 from datetime import datetime
+from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy import delete, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_db
+from models.user import User
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/internal", tags=["internal"], include_in_schema=False)
@@ -108,3 +110,43 @@ async def delete_session(
     )
     await db.commit()
     return {"deleted": True}
+
+
+class UserCreate(BaseModel):
+    email: str
+    role: str = "viewer"
+
+
+@router.get("/users")
+async def get_user_by_email(
+    email: str = Query(...),
+    db: AsyncSession = Depends(get_db),
+):
+    """Look up a user by email (called by NextAuth adapter during login)."""
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalar_one_or_none()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {
+        "id": str(user.id),
+        "email": user.email,
+        "role": user.role,
+        "emailVerified": user.created_at.isoformat(),
+    }
+
+
+@router.post("/users")
+async def create_user(
+    payload: UserCreate,
+    db: AsyncSession = Depends(get_db),
+):
+    """Create a user record (called by NextAuth adapter on first login)."""
+    result = await db.execute(select(User).where(User.email == payload.email))
+    existing = result.scalar_one_or_none()
+    if existing:
+        return {"id": str(existing.id), "email": existing.email, "role": existing.role, "emailVerified": existing.created_at.isoformat()}
+    user = User(email=payload.email, role=payload.role)
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+    return {"id": str(user.id), "email": user.email, "role": user.role, "emailVerified": user.created_at.isoformat()}

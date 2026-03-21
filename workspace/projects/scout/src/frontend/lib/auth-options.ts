@@ -16,14 +16,14 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 function ScoutAdapter() {
   return {
     async createUser(user: { email: string }) {
-      const res = await fetch(`${BACKEND_URL}/api/admin/users/invite`, {
+      const res = await fetch(`${BACKEND_URL}/internal/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: user.email, role: "viewer" }),
       });
       if (!res.ok) throw new Error("Failed to create user");
       const data = await res.json();
-      return { id: data.user_id, email: user.email, emailVerified: null };
+      return { id: data.id, email: data.email, emailVerified: null };
     },
 
     async getUser(_id: string) {
@@ -32,14 +32,10 @@ function ScoutAdapter() {
 
     async getUserByEmail(email: string) {
       try {
-        const res = await fetch(`${BACKEND_URL}/api/admin/users`, {
-          headers: { "Content-Type": "application/json" },
-        });
+        const res = await fetch(`${BACKEND_URL}/internal/users?email=${encodeURIComponent(email)}`);
         if (!res.ok) return null;
-        const users: Array<{ id: string; email: string; role: string }> = await res.json();
-        const found = users.find((u) => u.email === email);
-        if (!found) return null;
-        return { id: found.id, email: found.email, emailVerified: new Date(), role: found.role };
+        const data = await res.json();
+        return { id: data.id, email: data.email, emailVerified: new Date(), role: data.role };
       } catch {
         return null;
       }

@@ -3,7 +3,12 @@
 -- All timestamps stored as TIMESTAMPTZ in UTC
 -- All primary keys are UUIDs generated via gen_random_uuid()
 
-CREATE EXTENSION IF NOT EXISTS vector;
+-- pgvector is optional — embeddings disabled if not available
+DO $$ BEGIN
+  CREATE EXTENSION IF NOT EXISTS vector;
+EXCEPTION WHEN OTHERS THEN
+  RAISE NOTICE 'pgvector not available, embeddings disabled';
+END $$;
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- ─── competitors ────────────────────────────────────────────────────────────
@@ -66,7 +71,7 @@ CREATE TABLE IF NOT EXISTS intelligence_items (
     sentiment           VARCHAR(20),
     strategic_relevance TEXT,
     relevance_score     INTEGER      NOT NULL CHECK (relevance_score >= 0 AND relevance_score <= 100),
-    embedding           VECTOR(1536),
+    embedding           TEXT,
     source_url          VARCHAR(2000),
     source_name         VARCHAR(200),
     published_at        TIMESTAMPTZ,
@@ -155,8 +160,7 @@ CREATE INDEX IF NOT EXISTS idx_intelligence_items_companies
 CREATE INDEX IF NOT EXISTS idx_intelligence_items_domain
     ON intelligence_items (domain);
 
-CREATE INDEX IF NOT EXISTS idx_intelligence_items_embedding
-    ON intelligence_items USING hnsw (embedding vector_cosine_ops);
+-- Vector index skipped (requires pgvector extension)
 
 CREATE INDEX IF NOT EXISTS idx_raw_content_hash
     ON raw_content (content_hash);

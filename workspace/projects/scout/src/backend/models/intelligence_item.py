@@ -1,13 +1,11 @@
-"""IntelligenceItem ORM model with pgvector embedding column."""
+"""IntelligenceItem ORM model."""
 
 import uuid
 from datetime import datetime
 
 from sqlalchemy import Boolean, ForeignKey, Integer, String, Text, func
-from sqlalchemy.dialects.postgresql import JSONB, UUID 
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column
-
-from pgvector.sqlalchemy import Vector
 
 from models.base import Base
 
@@ -31,7 +29,7 @@ class IntelligenceItem(Base):
     sentiment: Mapped[str | None] = mapped_column(String(20))
     strategic_relevance: Mapped[str | None] = mapped_column(Text)
     relevance_score: Mapped[int] = mapped_column(Integer, nullable=False)
-    embedding: Mapped[list | None] = mapped_column(Vector(1536))
+    embedding: Mapped[str | None] = mapped_column(Text)
     source_url: Mapped[str | None] = mapped_column(String(2000))
     source_name: Mapped[str | None] = mapped_column(String(200))
     published_at: Mapped[datetime | None] = mapped_column()

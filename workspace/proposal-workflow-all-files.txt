@@ -1,0 +1,1062 @@
+================================================================================
+FILE 1 OF 4: SKILL.md (Main Proposal Workflow — 6 Stages)
+Path: .claude/skills/proposal/SKILL.md
+================================================================================
+
+---
+name: proposal
+description: End-to-end proposal workflow — from client requirements to a scoped, priced, AI-optimized proposal with contract language. Walks through 6 stages interactively.
+---
+
+# Proposal Workflow
+
+Takes a client problem statement and walks you through a 6-stage pipeline to produce a fully scoped, resource-mapped, AI-optimized proposal with contract-ready language.
+
+## How It Works
+
+This is an **interactive, multi-stage workflow**. Each stage produces a saved artifact that feeds the next. You can pause between stages and resume later.
+
+### The 6 Stages
+
+| Stage | Name | What It Produces |
+|-------|------|-----------------|
+| 1 | **Intake & Clarify** | Structured understanding of client need + answered clarifying questions |
+| 2 | **Market & Experience Research** | Landscape of tools, approaches, and relevant past projects |
+| 3 | **Scope & Assumptions** | Activities, deliverables, constraints, and assumptions |
+| 4 | **Contract Language** | Proposal draft using professional contracting definitions |
+| 5 | **Resource Mapping** | Activities mapped to roles, effort, and timeline |
+| 6 | **AI Efficiency Analysis** | AI opportunity ideas + revised estimates with approved efficiencies |
+
+### Project Folder
+
+All outputs are saved to: `workspace/projects/proposal-[client-slug]-[YYYY-MM-DD]/`
+
+Each stage creates a numbered file (e.g., `01-intake.md`, `02-research.md`, etc.) so you can see the full trail.
+
+---
+
+## Stage 1: Intake & Clarifying Questions
+
+### Purpose
+Transform a vague client problem statement into a structured, well-understood engagement scope.
+
+### How to Run
+
+Ask the user:
+
+```
+What's the client's problem or request?
+Give me whatever you have — a sentence, a paragraph, an email, bullet points.
+I'll work with whatever level of detail you've got.
+```
+
+### Once you have the client problem:
+
+**Generate 15-20 clarifying questions** organized into these categories:
+
+#### Scope & Boundaries
+- What systems/processes are in scope vs. out of scope?
+- Is this greenfield, migration, or optimization of something existing?
+- What's the geographic/organizational scope (one team, one BU, enterprise-wide)?
+- Are there integration points with other systems or initiatives?
+
+#### Timeline & Urgency
+- Is there a hard deadline or regulatory forcing function?
+- What's driving the timeline — contract expiration, compliance date, executive mandate?
+- Is there a preferred start date?
+- Are there blackout periods or competing priorities?
+
+#### Effort & Complexity
+- How many users/stakeholders are affected?
+- What's the current state of documentation and tribal knowledge?
+- Are there known technical debt issues or legacy constraints?
+- Has this been attempted before? What happened?
+
+#### Success Criteria
+- How will the client measure success?
+- What does "done" look like vs. "good enough for now"?
+- Are there KPIs or metrics they'll track?
+- What would make this a career win for the sponsor?
+
+#### Budget & Constraints
+- Is there an approved budget or a range they're working within?
+- Are there preferred vendors, platforms, or technology stacks?
+- Are there procurement or approval processes we need to factor in?
+- Any organizational constraints (hiring freezes, change moratoriums)?
+
+#### Stakeholders & Governance
+- Who is the executive sponsor?
+- Who are the day-to-day decision makers?
+- Is there a steering committee or governance structure?
+- Who will resist this and why?
+
+### Interaction Pattern
+
+1. Present the questions organized by category
+2. Ask the user to answer what they can — they can skip unknowns
+3. For skipped questions, note them as **"TBD — to clarify with client"**
+4. Summarize the understood scope back to the user for confirmation
+
+### Output
+
+Save to `[project-folder]/01-intake.md`:
+
+```markdown
+# Stage 1: Client Intake & Requirements
+Generated: [date]
+
+## Client Problem Statement
+[Original problem as stated by client]
+
+## Clarifying Questions & Answers
+
+### Scope & Boundaries
+| # | Question | Answer |
+|---|----------|--------|
+| 1 | [question] | [answer or "TBD — to clarify with client"] |
+
+### Timeline & Urgency
+[same table format]
+
+### Effort & Complexity
+[same table format]
+
+### Success Criteria
+[same table format]
+
+### Budget & Constraints
+[same table format]
+
+### Stakeholders & Governance
+[same table format]
+
+## Scope Summary
+[3-5 paragraph synthesis of what we understand so far]
+
+## Open Items
+- [ ] [Questions that still need answers]
+```
+
+### Then Ask:
+"Ready for Stage 2: Market & Experience Research? I'll look at what tools and approaches exist for this problem space."
+
+---
+
+## Stage 2: Market & Experience Research
+
+### Purpose
+Survey the landscape of tools, methodologies, and comparable projects to inform the proposal with real market intelligence.
+
+### How to Run
+
+1. **Read the Stage 1 output** from `01-intake.md`
+2. **Use web search** to research:
+   - Leading tools and platforms in the problem space
+   - Common methodologies and frameworks used
+   - Industry best practices and standards
+   - Analyst reports or comparison guides
+   - Known pitfalls and lessons learned
+
+3. **Ask the user about past experience:**
+
+```
+Have you done similar projects before?
+A) Yes — I can describe 1-2 relevant past projects
+B) Yes — my team has, but I wasn't directly involved
+C) No direct experience, but I know the space
+D) This is new territory for me
+E) Let me explain
+```
+
+4. If they have past project experience, capture:
+   - What was the engagement? (client type, scope, duration)
+   - What worked well?
+   - What went wrong or was harder than expected?
+   - What would you do differently?
+   - What was the team composition?
+   - What were the actual hours vs. estimated?
+
+### Output
+
+Save to `[project-folder]/02-research.md`:
+
+```markdown
+# Stage 2: Market & Experience Research
+Generated: [date]
+
+## Market Landscape
+
+### Tools & Platforms
+| Tool/Platform | Category | Strengths | Limitations | Pricing Model |
+|--------------|----------|-----------|-------------|---------------|
+| [name] | [category] | [strengths] | [limitations] | [pricing] |
+
+### Methodologies & Frameworks
+- **[Framework name]**: [description and when it applies]
+
+### Industry Best Practices
+- [Practice]: [why it matters]
+
+### Common Pitfalls
+- [Pitfall]: [how to avoid it]
+
+## Relevant Past Projects
+
+### Project: [Name/Description]
+- **Client type**: [industry, size]
+- **Scope**: [what was done]
+- **Duration**: [actual timeline]
+- **Team**: [composition]
+- **Estimated vs. Actual effort**: [comparison]
+- **What worked**: [key successes]
+- **What didn't**: [lessons learned]
+- **Key takeaway for this proposal**: [specific insight]
+
+## Research Implications for This Proposal
+[3-5 paragraphs synthesizing how the research should shape the proposal:
+- recommended approach
+- tools to consider
+- risks to plan for
+- realistic timeline expectations based on comparable projects]
+```
+
+### Then Ask:
+"Ready for Stage 3? I'll use this research to build out activities, scope, constraints, and assumptions."
+
+---
+
+## Stage 3: Scope, Activities, Constraints & Assumptions
+
+### Purpose
+Translate the client need and market research into a structured work breakdown with clear boundaries.
+
+### How to Run
+
+1. **Read Stage 1 and Stage 2 outputs**
+2. **Generate a phased approach** with:
+   - Phases (e.g., Discovery, Design, Build, Test, Deploy, Hypercare)
+   - Activities within each phase
+   - Deliverables per phase
+   - Entry/exit criteria per phase
+
+3. **Present to user for refinement** — this is collaborative:
+
+```
+Here's my proposed structure. For each phase, tell me:
+A) Looks right
+B) Add something
+C) Remove something
+D) Adjust scope (bigger/smaller)
+E) Let me explain what I'd change
+```
+
+4. **Develop constraints and assumptions** — these are critical for contract protection:
+
+#### Constraints (things that limit what we can do)
+- Client availability and access
+- Technology platform limitations
+- Timeline constraints
+- Budget constraints
+- Regulatory/compliance requirements
+- Change management bandwidth
+
+#### Assumptions (things we're assuming to be true)
+- Client will provide [resources, access, data] by [when]
+- Existing systems are [stable, documented, etc.]
+- Scope is limited to [boundaries]
+- Decision-making will follow [process]
+- Testing environments will be [available, configured, etc.]
+
+#### Dependencies (things outside our control that affect delivery)
+- Third-party vendor timelines
+- Client infrastructure readiness
+- Regulatory approvals
+- Parallel initiative completion
+
+### Output
+
+Save to `[project-folder]/03-scope.md`:
+
+```markdown
+# Stage 3: Scope, Activities & Assumptions
+Generated: [date]
+
+## Engagement Approach
+[2-3 paragraph overview of the recommended approach and methodology]
+
+## Phased Work Breakdown
+
+### Phase 1: [Phase Name] — [Duration estimate]
+
+**Objective**: [What this phase accomplishes]
+
+**Activities:**
+| # | Activity | Description | Deliverable | Est. Effort |
+|---|----------|-------------|-------------|-------------|
+| 1.1 | [Activity] | [What's involved] | [Output] | [Person-days] |
+| 1.2 | [Activity] | [What's involved] | [Output] | [Person-days] |
+
+**Entry Criteria**: [What must be true to start]
+**Exit Criteria**: [What must be true to complete]
+**Key Risks**: [Phase-specific risks]
+
+### Phase 2: [Phase Name] — [Duration estimate]
+[Same structure]
+
+### Phase 3: [Phase Name] — [Duration estimate]
+[Same structure]
+
+[Continue for all phases]
+
+## Deliverables Summary
+| # | Deliverable | Phase | Format | Acceptance Criteria |
+|---|-------------|-------|--------|-------------------|
+| D1 | [name] | [phase] | [format] | [how client accepts] |
+
+## Constraints
+| # | Constraint | Impact | Mitigation |
+|---|-----------|--------|------------|
+| C1 | [constraint] | [what it limits] | [how we manage it] |
+
+## Assumptions
+| # | Assumption | Risk if Wrong | Validation Approach |
+|---|-----------|---------------|-------------------|
+| A1 | [assumption] | [what happens if false] | [how we verify early] |
+
+## Dependencies
+| # | Dependency | Owner | Impact if Delayed |
+|---|-----------|-------|------------------|
+| D1 | [dependency] | [who owns it] | [what happens] |
+
+## Out of Scope
+[Explicit list of what is NOT included — critical for contract protection]
+- [Item and why it's excluded]
+```
+
+### Then Ask:
+"Ready for Stage 4? I'll draft this in professional contract language."
+
+---
+
+## Stage 4: Contract Language Generation
+
+### Purpose
+Transform the scope into professional, contract-ready language using consulting contracting conventions.
+
+### How to Run
+
+1. **Read Stage 3 output** plus reference templates from `references/contract-templates.md`
+2. **Generate contract sections** following professional services contracting patterns
+3. **Present for review** — call out any areas where language is especially important
+
+### Reference
+
+Load contract template patterns from:
+`.claude/skills/proposal/references/contract-templates.md`
+
+### Contract Sections to Generate
+
+1. **Engagement Overview** — executive summary in formal language
+2. **Scope of Services** — detailed description using contract-appropriate phrasing
+3. **Deliverables** — with acceptance criteria and format specifications
+4. **Assumptions & Dependencies** — written as contractual conditions
+5. **Constraints & Limitations** — what's excluded and why
+6. **Acceptance Process** — how deliverables are reviewed and accepted
+7. **Change Management** — how scope changes are handled (change orders)
+8. **Term & Timeline** — engagement duration with milestone dates
+
+### Interaction Pattern
+
+Present each section with:
+```
+Here's the contract language for [Section]. Review it for:
+A) Approved — looks good
+B) Too aggressive — soften the language
+C) Too conservative — we need stronger protections
+D) Missing something — let me tell you what
+E) Let me revise in my own words
+```
+
+### Output
+
+Save to `[project-folder]/04-contract.md`:
+
+```markdown
+# Stage 4: Proposal Contract Language
+Generated: [date]
+
+> **Note:** This is draft contract language. Review with legal/contracts team before client delivery.
+
+---
+
+## 1. Engagement Overview
+
+[Formal executive summary — 2-3 paragraphs describing the engagement, client objectives, and approach at a high level using professional services language]
+
+## 2. Scope of Services
+
+[Detailed scope written in contract language, referencing phases and activities from Stage 3. Uses precise language around "shall provide," "will deliver," etc.]
+
+### 2.1 [Phase 1 Name]
+[Formal description of phase scope]
+
+### 2.2 [Phase 2 Name]
+[Formal description of phase scope]
+
+[Continue for all phases]
+
+## 3. Deliverables
+
+| # | Deliverable | Description | Acceptance Criteria | Delivery Date |
+|---|-------------|-------------|-------------------|--------------|
+| [id] | [name] | [formal description] | [specific, measurable criteria] | [date/milestone] |
+
+## 4. Assumptions & Dependencies
+
+The following assumptions underpin this proposal. Material changes to these assumptions may require a scope adjustment per Section 7.
+
+1. [Assumption in formal language]
+2. [Assumption in formal language]
+
+## 5. Constraints & Exclusions
+
+The following items are explicitly excluded from the scope of this engagement:
+
+1. [Exclusion in formal language]
+2. [Exclusion in formal language]
+
+## 6. Deliverable Acceptance Process
+
+[Description of review period, feedback cycle, acceptance/rejection criteria, and dispute resolution]
+
+## 7. Change Management
+
+[Description of how scope changes are requested, evaluated, priced, and approved. Includes change order template reference.]
+
+## 8. Term & Timeline
+
+| Milestone | Target Date | Dependencies |
+|-----------|------------|-------------|
+| [milestone] | [date] | [what must be true] |
+
+## 9. Pricing Summary
+
+[Placeholder — to be completed after Stage 5 Resource Mapping]
+
+See Stage 5 output for detailed effort and pricing breakdown.
+```
+
+### Then Ask:
+"Ready for Stage 5? I'll map resources and build the effort estimate."
+
+---
+
+## Stage 5: Resource Mapping & Effort Estimation
+
+### Purpose
+Map each activity to specific roles, estimate effort, and build a resource plan with pricing.
+
+### How to Run
+
+1. **Read Stage 3 scope output**
+2. **Define the role taxonomy:**
+
+Ask the user:
+```
+What roles do you typically staff on engagements like this?
+Here's a starting set — adjust as needed:
+
+A) Use standard consulting roles:
+   - Partner/Director (oversight, client relationship)
+   - Manager/Senior Manager (day-to-day leadership)
+   - Senior Consultant (technical/functional lead)
+   - Consultant (core delivery)
+   - Analyst (junior support, documentation)
+
+B) I have a specific role structure — let me describe it
+
+C) Use technical roles:
+   - Solution Architect
+   - Technical Lead
+   - Developer/Engineer
+   - QA/Test Lead
+   - Business Analyst
+   - Project Manager
+
+D) Mix of both — let me specify
+```
+
+3. **Ask about rate card:**
+```
+What rate structure should I use?
+A) I'll provide my actual rates
+B) Use placeholder market rates (I'll adjust later)
+C) Use a blended rate approach
+D) Let me explain my pricing model
+```
+
+4. **For each activity from Stage 3**, estimate:
+   - Which roles are involved
+   - Hours per role
+   - Duration (calendar time)
+   - Dependencies on other activities
+
+5. **Build the resource plan** showing:
+   - Total effort by role
+   - Weekly/monthly resource loading
+   - Total cost at provided or placeholder rates
+   - Timeline with parallel vs. sequential work
+
+### Output
+
+Save to `[project-folder]/05-resources.md`:
+
+```markdown
+# Stage 5: Resource Mapping & Effort Estimation
+Generated: [date]
+
+## Role Definitions
+
+| Role | Level | Responsibilities | Rate ($/hr) |
+|------|-------|-----------------|-------------|
+| [role] | [seniority] | [what they do] | [rate] |
+
+## Effort by Phase & Activity
+
+### Phase 1: [Name]
+
+| Activity | Role(s) | Hours | Duration | Dependencies |
+|----------|---------|-------|----------|-------------|
+| [activity] | [roles] | [hrs] | [weeks] | [deps] |
+| **Phase 1 Total** | | **[total hrs]** | **[total duration]** | |
+
+### Phase 2: [Name]
+[Same structure]
+
+[Continue for all phases]
+
+## Resource Summary
+
+### Total Effort by Role
+| Role | Phase 1 | Phase 2 | Phase 3 | ... | Total Hours | Total Cost |
+|------|---------|---------|---------|-----|------------|-----------|
+| [role] | [hrs] | [hrs] | [hrs] | | [total] | $[cost] |
+| **Total** | **[hrs]** | **[hrs]** | **[hrs]** | | **[total]** | **$[total]** |
+
+### Resource Loading (People per Week)
+| Week | [Role 1] | [Role 2] | [Role 3] | Total FTE |
+|------|----------|----------|----------|-----------|
+| Wk 1-2 | [count] | [count] | [count] | [total] |
+
+### Timeline
+| Phase | Start | End | Duration | Team Size |
+|-------|-------|-----|----------|-----------|
+| [phase] | [date] | [date] | [weeks] | [FTEs] |
+
+## Pricing Summary
+
+| Category | Hours | Rate | Cost |
+|----------|-------|------|------|
+| [Role/Category] | [hrs] | $[rate] | $[cost] |
+| **Subtotal — Labor** | **[hrs]** | | **$[cost]** |
+| Expenses (estimated) | | | $[amount] |
+| **Total Engagement** | | | **$[total]** |
+
+## Key Estimation Assumptions
+- [Assumption about effort, e.g., "Client SMEs available 50% of the time"]
+- [Assumption about ramp-up, travel, etc.]
+```
+
+### Then Ask:
+"Ready for the final stage? This is the exciting one — I'll analyze where AI and automation could create efficiencies across the entire engagement, and you can pick which ones to bake into a revised estimate."
+
+---
+
+## Stage 6: AI Efficiency Analysis & Revised Estimate
+
+### Purpose
+Identify every opportunity where AI and automation could reduce effort, present them for approval, and produce a revised estimate with efficiencies baked in.
+
+### How to Run
+
+1. **Read ALL previous stage outputs** (01 through 05)
+2. **For every activity in the engagement**, analyze:
+   - Could AI tools accelerate this? (code generation, document drafting, analysis, testing)
+   - Could automation reduce manual effort? (CI/CD, infrastructure-as-code, automated testing)
+   - Could AI improve quality? (code review, security scanning, documentation)
+   - Could AI reduce the skill level needed? (enabling junior resources to do senior-level work)
+
+3. **Generate the AI Opportunity Register:**
+
+Present as a numbered table:
+
+```
+Here are the AI/automation opportunities I've identified across the engagement.
+For each one, tell me: YES (include it), NO (skip it), or MAYBE (discuss further).
+
+| #  | Activity | AI Opportunity | Est. Effort Reduction | Confidence | Tools/Approach |
+|----|----------|---------------|----------------------|------------|----------------|
+| 1  | [activity] | [what AI could do] | [30% / 2 days / etc.] | High/Med/Low | [specific tools] |
+| 2  | [activity] | [what AI could do] | [reduction] | [confidence] | [tools] |
+...
+```
+
+4. **Collect user decisions:**
+
+```
+Which opportunities do you want to include?
+- Type the numbers to APPROVE (e.g., "1, 3, 5, 7-12")
+- Type "all" to approve everything
+- Type "none" to skip AI optimization
+- Or tell me which ones you want to discuss further
+```
+
+5. **For approved opportunities**, recalculate:
+   - Revised hours per activity
+   - Revised role requirements (e.g., fewer senior hours if AI assists)
+   - Revised timeline
+   - Revised total cost
+   - Net savings
+
+6. **Show the comparison:**
+   - Original estimate vs. AI-optimized estimate
+   - Total hours saved
+   - Total cost savings
+   - Percentage reduction
+   - Risk factors (what if AI tools underperform?)
+
+### Important Principles
+
+- **AI tools are assumed at no cost** (as per user requirement) — only labor savings are calculated
+- **Be honest about confidence levels** — some AI gains are proven (code generation), others are speculative (complex analysis)
+- **Always include a risk buffer** — don't assume 100% of projected savings will materialize
+- **Distinguish between "AI assists human" and "AI replaces task"** — the former is more realistic
+
+### Output
+
+Save to `[project-folder]/06-ai-efficiency.md`:
+
+```markdown
+# Stage 6: AI Efficiency Analysis
+Generated: [date]
+
+## AI Opportunity Register
+
+### All Identified Opportunities
+
+| # | Phase | Activity | AI Opportunity | Effort Reduction | Confidence | Tools | Status |
+|---|-------|----------|---------------|-----------------|------------|-------|--------|
+| 1 | [phase] | [activity] | [description] | [hours/pct] | H/M/L | [tools] | Approved/Rejected/TBD |
+
+### Approved Opportunities Detail
+
+#### Opportunity #[N]: [Name]
+- **Activity**: [which activity this applies to]
+- **Current effort**: [hours and roles]
+- **AI approach**: [how AI would be used — be specific]
+- **Tools**: [specific AI tools or capabilities]
+- **Revised effort**: [new hours and roles]
+- **Savings**: [hours saved, cost saved]
+- **Confidence**: [H/M/L with explanation]
+- **Risk**: [what could go wrong]
+- **Prerequisite**: [any setup, training, or licensing needed]
+
+## Revised Estimate
+
+### Side-by-Side Comparison
+
+| Category | Original | AI-Optimized | Savings | % Reduction |
+|----------|----------|-------------|---------|-------------|
+| Total Hours | [hrs] | [hrs] | [hrs saved] | [%] |
+| Total Cost | $[cost] | $[cost] | $[saved] | [%] |
+| Duration | [weeks] | [weeks] | [weeks saved] | [%] |
+| Team Size (avg FTE) | [count] | [count] | [reduction] | [%] |
+
+### Revised Effort by Phase
+
+| Phase | Original Hours | AI-Optimized Hours | Savings | Key AI Opportunities Applied |
+|-------|---------------|-------------------|---------|------------------------------|
+| [phase] | [hrs] | [hrs] | [hrs] | [which opportunities] |
+
+### Revised Effort by Role
+
+| Role | Original Hours | AI-Optimized Hours | Savings | Notes |
+|------|---------------|-------------------|---------|-------|
+| [role] | [hrs] | [hrs] | [hrs] | [how AI changes this role's work] |
+
+### Revised Pricing
+
+| Category | Original | AI-Optimized | Savings |
+|----------|----------|-------------|---------|
+| [Role/Category] | $[cost] | $[cost] | $[saved] |
+| **Total** | **$[original]** | **$[optimized]** | **$[saved]** |
+
+## Risk Factors
+
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| AI tools underperform expectations | [hours/cost impact] | [buffer built in] |
+| Team needs AI training/ramp-up | [time impact] | [training plan] |
+| Client doesn't approve AI usage | [revert to original estimate] | [present both options] |
+
+## Recommendation
+
+[2-3 paragraphs on the recommended approach:
+- Present original estimate as the "conservative" option
+- Present AI-optimized as the "efficient" option
+- Suggest which to lead with based on client relationship and risk tolerance
+- Note any opportunities to share savings with the client as a competitive advantage]
+```
+
+---
+
+## After All Stages Complete
+
+Generate a **final proposal summary** that stitches everything together:
+
+Save to `[project-folder]/00-proposal-summary.md`:
+
+```markdown
+# Proposal: [Client Name] — [Engagement Title]
+Generated: [date]
+
+## Executive Summary
+[Synthesize from all stages — 1 page max]
+
+## Table of Contents
+1. [Engagement Overview](#)
+2. [Scope of Services](#)
+3. [Approach & Methodology](#)
+4. [Deliverables](#)
+5. [Timeline & Milestones](#)
+6. [Team & Resources](#)
+7. [Investment](#)
+8. [Assumptions & Constraints](#)
+9. [AI-Enabled Efficiency Option](#)
+10. [Appendices](#)
+
+[Full synthesized proposal pulling from all 6 stage outputs]
+```
+
+Then ask:
+```
+Your proposal package is complete! Here's what was generated:
+
+📁 [project-folder]/
+├── 00-proposal-summary.md  ← Full synthesized proposal
+├── 01-intake.md            ← Client requirements & clarifying questions
+├── 02-research.md          ← Market & experience research
+├── 03-scope.md             ← Activities, constraints & assumptions
+├── 04-contract.md          ← Contract-ready language
+├── 05-resources.md         ← Resource mapping & pricing
+└── 06-ai-efficiency.md     ← AI optimization analysis
+
+What would you like to do next?
+A) Revise a specific stage
+B) Export to a different format (Word, PDF, slides)
+C) Run through it again with different assumptions
+D) Start a new proposal for a different client
+```
+
+---
+
+## Resuming a Proposal
+
+If the user has a partially completed proposal, check `workspace/projects/proposal-*/` for existing stage files and resume from where they left off.
+
+## Running Individual Stages
+
+The user can request any individual stage by saying things like:
+- "Just run Stage 2 on this" → Run market research only
+- "Redo the resource mapping" → Re-run Stage 5
+- "Add AI analysis to my existing proposal" → Run Stage 6 only
+
+When running individual stages, look for existing outputs to use as inputs.
+
+
+================================================================================
+FILE 2 OF 4: contract-templates.md (Professional Services Contract Templates)
+Path: .claude/skills/proposal/references/contract-templates.md
+================================================================================
+
+# Professional Services Contract Language Templates
+
+> **Note:** These are placeholder templates. Replace with your firm's actual contracting language, definitions, and approved terms when available. The structure follows standard professional services contracting conventions.
+
+---
+
+## Standard Definitions
+
+Use these definitions consistently throughout contract documents:
+
+- **"Services"** — The professional consulting services described in the Scope of Services section of this Statement of Work.
+- **"Deliverables"** — The tangible work products identified in the Deliverables section, to be provided to Client in the format specified.
+- **"Client Materials"** — Information, data, documents, systems access, and other materials provided by Client for use in performing the Services.
+- **"Engagement Period"** — The period commencing on the Effective Date and ending on the date specified in the Term section, unless earlier terminated.
+- **"Change Order"** — A written amendment to this Statement of Work that documents changes to scope, timeline, or fees, signed by authorized representatives of both parties.
+- **"Acceptance Criteria"** — The objective standards against which Deliverables will be evaluated, as specified in the Deliverables section.
+- **"Business Day"** — Monday through Friday, excluding federal holidays observed by [Firm Name].
+- **"Key Personnel"** — The individuals identified in the Team section who are essential to the performance of the Services.
+
+---
+
+## Scope of Services — Language Patterns
+
+### Inclusive Scope Pattern
+> [Firm Name] shall provide the following professional services ("Services") to [Client Name] ("Client") as described in this Statement of Work ("SOW"):
+
+### Phase Description Pattern
+> **Phase [N]: [Phase Name]** — During this phase, the [Firm Name] team will [high-level description]. This phase is expected to span approximately [N] weeks, commencing upon [trigger event]. Key activities include:
+> - [Activity described using "will" for firm commitments or "may" for discretionary items]
+
+### Exclusion Pattern
+> The following items are expressly excluded from the scope of this engagement and, if required, would be addressed through a separate Statement of Work or Change Order:
+> - [Exclusion item]
+
+---
+
+## Deliverables — Language Patterns
+
+### Deliverable Description Pattern
+> **Deliverable [ID]: [Name]** — [Firm Name] shall deliver [description] in [format] by [date/milestone]. This deliverable will include [specific contents]. Client acceptance of this deliverable is governed by Section [N] (Acceptance Process).
+
+### Acceptance Process Pattern
+> Upon delivery of each Deliverable, Client shall have [N] Business Days to review and either (a) accept the Deliverable in writing, or (b) provide written notice of specific deficiencies. If Client provides notice of deficiencies, [Firm Name] shall have [N] Business Days to address such deficiencies and redeliver. If Client fails to respond within the review period, the Deliverable shall be deemed accepted.
+
+---
+
+## Assumptions — Language Patterns
+
+### Standard Assumption Pattern
+> This Statement of Work is based upon the following assumptions. Material changes to these assumptions may constitute a scope change and may require a Change Order:
+>
+> 1. Client shall provide [Firm Name] with timely access to [systems/personnel/data/facilities] as reasonably required to perform the Services.
+> 2. Client shall designate a single point of contact ("Client Project Manager") with authority to make day-to-day decisions regarding the Services.
+> 3. Client shall make key stakeholders and subject matter experts available for [N] hours per week during [phase/duration].
+> 4. [Firm Name] personnel will work remotely unless on-site presence is specifically required, in which case Client shall provide adequate workspace and facilities.
+
+### Impact-if-Wrong Pattern
+> If any assumption proves to be materially inaccurate, [Firm Name] reserves the right to propose a Change Order to adjust scope, timeline, or fees to reflect the actual conditions encountered.
+
+---
+
+## Change Management — Language Patterns
+
+### Change Order Process Pattern
+> Either party may propose changes to the scope, timeline, or fees of this SOW. All changes must be documented in a written Change Order that includes:
+> - Description of the proposed change
+> - Impact on scope, timeline, and fees
+> - Approval signatures from authorized representatives of both parties
+>
+> No change shall be effective until a Change Order has been executed by both parties. Work on changed items shall not commence until the Change Order is approved.
+
+---
+
+## Timeline & Milestones — Language Patterns
+
+### Milestone Pattern
+> The following milestones represent the anticipated timeline for the engagement. Dates are estimates and may be adjusted by mutual agreement:
+>
+> | Milestone | Target Date | Dependencies |
+> |-----------|------------|-------------|
+> | [name] | [date] | [conditions] |
+>
+> Achievement of milestone dates is contingent upon Client meeting its obligations as described in the Assumptions section.
+
+---
+
+## Fees & Payment — Language Patterns
+
+### Time & Materials Pattern
+> Fees for the Services shall be calculated on a time and materials basis at the following rates:
+>
+> | Role | Hourly Rate |
+> |------|------------|
+> | [role] | $[rate] |
+>
+> [Firm Name] shall invoice Client [frequency] for Services performed during the preceding period. Payment is due within [N] days of invoice date.
+
+### Fixed Fee Pattern
+> The total fixed fee for the Services described in this SOW is $[amount]. This fee covers all labor costs for the Services as described. Fees shall be invoiced according to the following milestone schedule:
+>
+> | Milestone | Amount | Trigger |
+> |-----------|--------|---------|
+> | [name] | $[amount] | [when invoiced] |
+
+### Expense Pattern
+> Reasonable travel and out-of-pocket expenses incurred in connection with the Services shall be reimbursed at cost, subject to Client's expense policy. Estimated expenses for this engagement are $[amount].
+
+---
+
+## Limitation of Liability — Language Patterns
+
+### Standard Limitation Pattern
+> [Firm Name]'s aggregate liability under this SOW shall not exceed the total fees paid or payable under this SOW. In no event shall either party be liable for indirect, incidental, consequential, special, or punitive damages.
+
+---
+
+## Confidentiality — Language Patterns
+
+### Standard Confidentiality Pattern
+> Each party agrees to maintain the confidentiality of the other party's Confidential Information and to use such information solely for the purposes of this engagement. This obligation shall survive termination of this SOW for a period of [N] years.
+
+---
+
+## Termination — Language Patterns
+
+### Termination for Convenience Pattern
+> Either party may terminate this SOW for convenience upon [N] days' written notice. Upon termination, Client shall pay [Firm Name] for all Services performed and expenses incurred through the effective date of termination.
+
+### Termination for Cause Pattern
+> Either party may terminate this SOW for cause if the other party materially breaches this SOW and fails to cure such breach within [N] days of written notice.
+
+---
+
+## Usage Notes
+
+- **"Shall" vs. "Will"**: Use "shall" for binding obligations, "will" for descriptions of expected behavior
+- **Specificity**: Always quantify where possible (days, hours, dollars) rather than using vague terms
+- **Mutuality**: Where possible, make obligations mutual to demonstrate fairness
+- **Escape valves**: Always include Change Order provisions so scope adjustments don't require a new contract
+- **Client obligations**: Clearly state what the client must provide — this protects against delays caused by client inaction
+
+---
+
+> **TODO:** Replace these templates with your firm's approved contract language, including:
+> - Firm-specific definitions and terms
+> - Approved limitation of liability language
+> - Standard IP ownership clauses
+> - Data protection and privacy provisions
+> - Insurance requirements
+> - Governing law and jurisdiction
+
+
+================================================================================
+FILE 3 OF 4: resource-rates.md (Placeholder Rate Card)
+Path: .claude/skills/proposal/references/resource-rates.md
+================================================================================
+
+# Resource Rate Card — Placeholder
+
+> **Note:** These are placeholder market rates for professional services consulting. Replace with your firm's actual rate card.
+
+---
+
+## Standard Consulting Roles
+
+| Role | Level | Hourly Rate (USD) | Daily Rate (USD) | Typical Utilization |
+|------|-------|-------------------|------------------|-------------------|
+| Partner / Director | Executive | $450 - $650 | $3,600 - $5,200 | 10-20% of engagement |
+| Senior Manager / Principal | Senior Leadership | $350 - $500 | $2,800 - $4,000 | 20-30% of engagement |
+| Manager | Management | $275 - $400 | $2,200 - $3,200 | 40-60% of engagement |
+| Senior Consultant | Senior Individual Contributor | $200 - $325 | $1,600 - $2,600 | 80-100% of engagement |
+| Consultant | Individual Contributor | $150 - $250 | $1,200 - $2,000 | 80-100% of engagement |
+| Analyst | Junior | $100 - $175 | $800 - $1,400 | 80-100% of engagement |
+
+## Technical Specialist Roles
+
+| Role | Level | Hourly Rate (USD) | Daily Rate (USD) | Typical Utilization |
+|------|-------|-------------------|------------------|-------------------|
+| Solution Architect | Senior Technical | $300 - $450 | $2,400 - $3,600 | 30-50% of engagement |
+| Technical Lead | Mid-Senior Technical | $250 - $375 | $2,000 - $3,000 | 60-80% of engagement |
+| Senior Developer / Engineer | Senior IC | $200 - $325 | $1,600 - $2,600 | 80-100% of engagement |
+| Developer / Engineer | IC | $150 - $250 | $1,200 - $2,000 | 80-100% of engagement |
+| QA / Test Lead | Mid-Senior | $175 - $275 | $1,400 - $2,200 | 60-80% of engagement |
+| Business Analyst | Mid | $150 - $250 | $1,200 - $2,000 | 80-100% of engagement |
+| Project Manager | Mid-Senior | $200 - $325 | $1,600 - $2,600 | 50-80% of engagement |
+
+## Estimation Defaults
+
+- **Working hours per day**: 8
+- **Working days per week**: 5
+- **Working weeks per month**: 4.33
+- **Contingency buffer**: 15-20% of total estimate
+- **Management overhead**: 10-15% of delivery effort
+- **Ramp-up period**: 1-2 weeks for new team members
+
+## Blended Rate Shortcuts
+
+For quick estimates before detailed role mapping:
+
+| Engagement Type | Typical Blended Rate | Notes |
+|----------------|---------------------|-------|
+| Strategy / Advisory | $350 - $500/hr | Senior-heavy team |
+| Implementation | $225 - $350/hr | Mixed seniority |
+| Technical Delivery | $200 - $300/hr | IC-heavy team |
+| Staff Augmentation | $150 - $250/hr | Individual contributor rates |
+| Managed Services | $175 - $275/hr | Ongoing, steady-state |
+
+---
+
+> **TODO:** Replace with your firm's actual rate card, including:
+> - Exact rates by role and level
+> - Any volume discounts or preferred pricing
+> - Travel and expense policies
+> - Rate escalation terms (annual increases)
+> - Fixed-fee conversion factors
+
+
+================================================================================
+FILE 4 OF 4: proposal.md (Slash Command Definition)
+Path: .claude/commands/proposal.md
+================================================================================
+
+---
+name: proposal
+description: End-to-end proposal workflow — from client requirements to a scoped, priced, AI-optimized proposal with contract language. Walks through 6 stages interactively.
+---
+
+# Proposal Workflow
+
+Generate a complete client proposal through a guided 6-stage pipeline.
+
+## Usage
+
+```
+/proposal
+/proposal [client problem description]
+```
+
+## What This Does
+
+Walks you through 6 interactive stages to build a complete proposal:
+
+| Stage | What It Does | Output |
+|-------|-------------|--------|
+| **1. Intake & Clarify** | Generates clarifying questions about scope, timeline, effort, budget | Structured requirements |
+| **2. Market Research** | Searches for tools, approaches, and comparable projects | Market landscape + past project insights |
+| **3. Scope & Assumptions** | Builds phased work breakdown with constraints and assumptions | Activities, deliverables, entry/exit criteria |
+| **4. Contract Language** | Drafts proposal in professional contracting language | Contract-ready sections |
+| **5. Resource Mapping** | Maps activities to roles with effort and cost estimates | Resource plan + pricing |
+| **6. AI Efficiency** | Identifies AI/automation opportunities with toggle to approve | Revised estimate with AI savings |
+
+## Output
+
+Creates a full proposal package in `workspace/projects/proposal-[client]-[date]/`:
+
+```
+proposal-[client]-[date]/
+├── 00-proposal-summary.md  ← Full synthesized proposal
+├── 01-intake.md            ← Client requirements
+├── 02-research.md          ← Market research
+├── 03-scope.md             ← Scope & assumptions
+├── 04-contract.md          ← Contract language
+├── 05-resources.md         ← Resource mapping
+└── 06-ai-efficiency.md     ← AI optimization
+```
+
+## Features
+
+- **Pause & resume** — Stop at any stage, come back later
+- **Run individual stages** — "Just redo the resource mapping"
+- **AI efficiency toggle** — See all AI opportunities, approve the ones you want, get revised pricing
+- **Contract-ready language** — Uses professional services contracting patterns
+
+## Best Used When
+
+- A client describes a problem and you need to turn it into a proposal fast
+- You want to see where AI could create competitive pricing advantages
+- You need structured contract language for a new engagement
+
+$ARGUMENTS
+Optional: Client problem statement or description. If not provided, the workflow will ask for it.
